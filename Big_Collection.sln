@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orders", "Orders\Orders.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Payments", "Payments\Payments.csproj", "{5ACF0539-9A97-4286-B1DA-657CC630E4DA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "APIGateway", "APIGateway\APIGateway.csproj", "{7D3A4632-5D2C-4F4A-94E5-40C512754226}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{5ACF0539-9A97-4286-B1DA-657CC630E4DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5ACF0539-9A97-4286-B1DA-657CC630E4DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5ACF0539-9A97-4286-B1DA-657CC630E4DA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7D3A4632-5D2C-4F4A-94E5-40C512754226}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7D3A4632-5D2C-4F4A-94E5-40C512754226}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7D3A4632-5D2C-4F4A-94E5-40C512754226}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7D3A4632-5D2C-4F4A-94E5-40C512754226}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
