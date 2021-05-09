@@ -1,22 +1,16 @@
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Users.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Users.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace Users
 {
@@ -46,6 +40,15 @@ namespace Users
             {
                 options.UseSqlServer(Configuration.GetConnectionString("SqlDatabase"));
             });
+
+            // Add Identity Framework
+            services.AddIdentity<User, UserRole>(options =>
+            {
+                options.User.RequireUniqueEmail = true;
+            })
+                .AddRoles<UserRole>()
+                .AddEntityFrameworkStores<UserDbContext>();
+
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
                 {
@@ -69,7 +72,7 @@ namespace Users
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, UserDbContext context, UserManager<User> userManager, RoleManager<UserRole> roleManager)
         {
             if (env.IsDevelopment())
             {
@@ -89,6 +92,8 @@ namespace Users
             {
                 endpoints.MapControllers();
             });
+            AdminsUsersRoles adminUserRoles = new AdminsUsersRoles(context, userManager, roleManager);
+            adminUserRoles.Initialize().Wait();
         }
     }
 }
