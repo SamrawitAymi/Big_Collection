@@ -19,62 +19,105 @@ namespace Users.UnitTest
     {
         public static IConfigurationRoot Config { get; set; }
 
-        //[ClassInitialize]
-        //public static void LoadAppsettings(TestContext context)
+        [ClassInitialize]
+        public static void LoadAppsettings(TestContext context)
+        {
+            var appSettings = new AppSettings();
+            Config = appSettings.Config;
+        }
+
+
+        //[TestMethod]
+        //public void CreateToken_createNewToken_ReturnNull()
         //{
-        //    var appSettings = new AppSettings();
-        //    Config = appSettings.Config;
+        //    // Arrange
+        //    JwtTokenHandler tokenHandler = new JwtTokenHandler(Config);
+        //    var user = DummyUsers.User();
+
+        //    // Act
+        //    string token = tokenHandler.CreateToken(user);
+
+        //    // Assert
+        //    Assert.IsNotNull(token);
         //}
 
-
         [TestMethod]
-        public void CreateToken_createNewToken_ReturnNull()
-        {
-            //Arrange
-            IConfigurationRoot config = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
-
-            JwtTokenHandler createToken = new JwtTokenHandler(config);
-            var user = DummyUsers.User();
-
-            // Act
-            string token = createToken.CreateToken(user);
-
-            // Assert
-            Assert.IsNotNull(token);
-        }
-
-        [TestMethod]
-        public void SetTokenClaims_CreateSetOfClaims_ReturnItemsNotNull()
+        public void CreateToken_TryCreateNewJwtTokenWithNullUser_ReturnNULL()
         {
             // Arrange
-            JwtTokenHandler tokenHandler = new JwtTokenHandler();
+            JwtTokenHandler tokenHandler = new JwtTokenHandler(Config);
             var user = DummyUsers.User();
 
             // Act
-            var result = tokenHandler.SetTokenClaims(user).ToList();
+            string token = tokenHandler.CreateToken(null);
 
             // Assert
-            CollectionAssert.AllItemsAreNotNull(result);
+            Assert.IsNull(token);
         }
+
+
+        //[TestMethod]
+        //public void CreateRefreshToken_TryCreateNewRefreshJwtToken_ReturnNotNULL()
+        //{
+        //    // Arrange
+        //    JwtTokenHandler tokenHandler = new JwtTokenHandler(Config);
+        //    var user = DummyUsers.User();
+
+        //    // Act
+        //    string token = tokenHandler.CreateRefreshToken(user);
+
+        //    // Assert
+        //    Assert.IsNotNull(token);
+        //}
 
         [TestMethod]
-        public void ConfigureToken_CreateJwtSecurityToken_ReturnJwtSecurityTokenNotNull()
+        public void CreateRefreshToken_TryCreateNewRefreshJwtTokenWithNullUser_ReturnNULL()
         {
             // Arrange
-            IConfigurationRoot config = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
-
-            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["JWT:Key"]));
-            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
-
-            JwtTokenHandler tokenHandler = new JwtTokenHandler(config);
+            JwtTokenHandler tokenHandler = new JwtTokenHandler(Config);
             var user = DummyUsers.User();
-            var claims = tokenHandler.SetTokenClaims(user);
 
             // Act
-            var result = tokenHandler.ConfigureToken(claims, credentials);
+            string token = tokenHandler.CreateRefreshToken(null);
 
             // Assert
-            Assert.IsNotNull(result);
+            Assert.IsNull(token);
         }
+
+        //[TestMethod]
+        //public void ValidateToken_CheckIfJwtTokenIsValid_ReturnTrue()
+        //{
+        //    // Arrange
+        //    JwtTokenHandler tokenHandler = new JwtTokenHandler(Config);
+        //    var user = DummyUsers.User();
+        //    string token = tokenHandler.CreateToken(user);
+
+        //    // Act
+        //    var result = tokenHandler.ValidateToken(token)
+        //        .Identity
+        //        .IsAuthenticated;
+
+        //    // Assert
+        //    Assert.IsTrue(result);
+
+        //}
+
+        //[TestMethod]
+        //public void ValidateRefreshToken_CheckIfJwtRefreshTokenIsValid_ReturnTrue()
+        //{
+        //    // Arrange
+        //    JwtTokenHandler tokenHandler = new JwtTokenHandler(Config);
+        //    var user = DummyUsers.User();
+        //    string token = tokenHandler.CreateRefreshToken(user);
+
+        //    // Act
+        //    var result = tokenHandler.ValidateRefreshToken(token)
+        //        .Identity
+        //        .IsAuthenticated;
+
+        //    // Assert
+        //    Assert.IsTrue(result);
+
+        //}
     }
 }
