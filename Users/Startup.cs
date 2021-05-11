@@ -11,6 +11,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Users.Models;
 using Microsoft.AspNetCore.Identity;
+using Users.Services;
 
 namespace Users
 {
@@ -69,6 +70,7 @@ namespace Users
             {
                 options.DefaultAuthenticateScheme = "Bearer";
             });
+            services.AddSingleton<JwtTokenHandler>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

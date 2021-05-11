@@ -16,7 +16,12 @@ namespace Users.UnitTest
                 Id = Guid.NewGuid(),
                 FirstName = "Emma",
                 LastName = "Nike",
-                Email = "emma.nike@yahoo.com"
+                Email = "emma.nike@yahoo.com", 
+                UserName = "emma.nike@yahoo.com",
+                Address = "TestAddress123",
+                City = "TestCity",
+                Zip = "12345",
+                PhoneNumber = "070-111 23 45"
             };
             return user;
         }

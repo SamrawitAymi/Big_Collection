@@ -3,10 +3,8 @@ using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Security.Claims;
 using System.Text;
-using System.Threading.Tasks;
 using Users.Models;
 using Users.Settings;
 
@@ -17,28 +15,29 @@ namespace Users.Services
     {
         private readonly IConfiguration _config;
 
-        public JwtTokenHandler()
-        {
-        }
-
         public JwtTokenHandler(IConfiguration config)
         {
             this._config = config;
         }
 
-        public string CreateToken(User user)
+        public string CreateToken(User user, bool isAdmin = false)
         {
             if (user == null)
                 return null;
 
             var expirationDate = DateTime.UtcNow.AddMinutes(int.Parse(_config[AppSettings.JWT_EXPIRE_MINUTES]));
             var credentials = SignCredentials(AppSettings.JWT_KEY);
-            var claims = SetTokenClaims(user);
+            var claims = SetTokenClaims(user, isAdmin, expirationDate);
             var token = ConstructJwtToken(claims, credentials, expirationDate);
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
+        /// <summary>
+        /// Creates a new refresh token. The refresh can be used to generate a new JWT token for authorization
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
         public string CreateRefreshToken(User user)
         {
             if (user == null)
@@ -46,7 +45,7 @@ namespace Users.Services
 
             var expirationDate = DateTime.UtcNow.AddMonths(int.Parse(_config[AppSettings.JWT_EXPIRE_MONTHS]));
             var credentials = SignCredentials(AppSettings.JWT_REFRESHKEY);
-            var claims = SetRefreshTokenClaims(user);
+            var claims = SetRefreshTokenClaims(user, expirationDate);
             var token = ConstructJwtToken(claims, credentials, expirationDate);
 
             return new JwtSecurityTokenHandler().WriteToken(token);
@@ -59,24 +58,27 @@ namespace Users.Services
             return credentials;
         }
 
-        private IEnumerable<Claim> SetTokenClaims(User user)
+        private IEnumerable<Claim> SetTokenClaims(User user, bool isAdmin, DateTime expires)
         {
             var claims = new List<Claim>()
             {
                 new Claim("FirstName", user.FirstName),
                 new Claim("LastName", user.LastName),
                 new Claim("UserEmail", user.Email),
-                new Claim("UserId", user.Id.ToString())
+                new Claim("UserId", user.Id.ToString()),
+                new Claim(ClaimTypes.Expiration, expires.ToString()),
+                new Claim(ClaimTypes.Role, (isAdmin) ? "Admin" : "User")
             };
 
             return claims;
         }
 
-        private IEnumerable<Claim> SetRefreshTokenClaims(User user)
+        private IEnumerable<Claim> SetRefreshTokenClaims(User user, DateTime expires)
         {
             var claims = new List<Claim>()
             {
-                new Claim("UserId", user.Id.ToString())
+                new Claim("UserId", user.Id.ToString()),
+                new Claim(ClaimTypes.Expiration, expires.ToString())
             };
 
             return claims;
@@ -85,28 +87,40 @@ namespace Users.Services
         private JwtSecurityToken ConstructJwtToken(IEnumerable<Claim> claims, SigningCredentials credentials, DateTime expires)
         {
             var token = new JwtSecurityToken(
-                issuer: _config[AppSettings.JWT_ISSUER],
-                audience: _config[AppSettings.JWT_ISSUER],
+                _config[AppSettings.JWT_ISSUER],
+                _config[AppSettings.JWT_ISSUER],
                 claims,
-                expires: expires,
-                signingCredentials: credentials);
+                null,
+                expires,
+                credentials
+                );
 
             return token;
         }
 
+        /// <summary>
+        /// Validate the JWT-redentials and expiration time
+        /// </summary>
+        /// <param name="token"></param>
+        /// <returns>A ClaimsPrincipal that can be used for checking the Identity.IsAuthenticated property to check if token is valid</returns>
         public ClaimsPrincipal ValidateToken(string token)
         {
             var claimsPrincipal = Validate(token, AppSettings.JWT_KEY);
             return claimsPrincipal;
         }
 
+        /// <summary>
+        /// Validate the JWT-refresh tokens redentials and expiration time
+        /// </summary>
+        /// <param name="token"></param>
+        /// <returns>A ClaimsPrincipal that can be used for checking the Identity.IsAuthenticated property to check if token is valid</returns>
         public ClaimsPrincipal ValidateRefreshToken(string token)
         {
             var claimsPrincipal = Validate(token, AppSettings.JWT_REFRESHKEY);
             return claimsPrincipal;
         }
 
-        private TokenValidationParameters TokenValidationSetup(string token, string securityKey)
+        private TokenValidationParameters TokenValidationSetup(string securityKey)
         {
             var validationParameters = new TokenValidationParameters()
             {
@@ -115,7 +129,8 @@ namespace Users.Services
                 ValidateIssuerSigningKey = true,
                 ValidateActor = false,
                 ValidateLifetime = true,
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config[securityKey]))
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config[securityKey])),
+                ClockSkew = TimeSpan.Zero
             };
 
             return validationParameters;
@@ -123,11 +138,17 @@ namespace Users.Services
 
         private ClaimsPrincipal Validate(string token, string securityKey)
         {
-            var validationParameters = TokenValidationSetup(token, securityKey);
-            var handler = new JwtSecurityTokenHandler();
-            var result = handler.ValidateToken(token, validationParameters, out var securityToken);
-
-            return result;
+            try
+            {
+                var validationParameters = TokenValidationSetup(securityKey);
+                var handler = new JwtSecurityTokenHandler();
+                var result = handler.ValidateToken(token, validationParameters, out var securityToken);
+                return result;
+            }
+            catch (SecurityTokenException)
+            {
+                return null;
+            }
         }
     }
 }

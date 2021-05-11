@@ -27,20 +27,39 @@ namespace Users.UnitTest
         }
 
 
-        //[TestMethod]
-        //public void CreateToken_createNewToken_ReturnNull()
-        //{
-        //    // Arrange
-        //    JwtTokenHandler tokenHandler = new JwtTokenHandler(Config);
-        //    var user = DummyUsers.User();
+        [TestMethod]
+        public void CreateToken_createNewToken_ReturnStringToken()
+        {
+            // Arrange
+            JwtTokenHandler tokenHandler = new JwtTokenHandler(Config);
+            var user = DummyUsers.User();
 
-        //    // Act
-        //    string token = tokenHandler.CreateToken(user);
+            // Act
+            string token = tokenHandler.CreateToken(user, false);
 
-        //    // Assert
-        //    Assert.IsNotNull(token);
-        //}
+            // Assert
+            Assert.IsNotNull(token);
+        }
 
+        [TestMethod]
+        public void ValidateToken_CheckIfJwtTokenIsValid_ReturnTrue()
+        {
+            // Arrange
+            JwtTokenHandler tokenHandler = new JwtTokenHandler(Config);
+            var user = DummyUsers.User();
+            string token = tokenHandler.CreateToken(user);
+
+            // Act
+            var result = tokenHandler.ValidateToken(token)
+                .Identity
+                .IsAuthenticated;
+
+            // Assert
+            Assert.IsTrue(result);
+
+        }
+
+       
         [TestMethod]
         public void CreateToken_TryCreateNewJwtTokenWithNullUser_ReturnNULL()
         {
@@ -55,20 +74,19 @@ namespace Users.UnitTest
             Assert.IsNull(token);
         }
 
+        [TestMethod]
+        public void CreateRefreshToken_TryCreateNewRefreshJwtToken_ReturnNotNULL()
+        {
+            // Arrange
+            JwtTokenHandler tokenHandler = new JwtTokenHandler(Config);
+            var user = DummyUsers.User();
 
-        //[TestMethod]
-        //public void CreateRefreshToken_TryCreateNewRefreshJwtToken_ReturnNotNULL()
-        //{
-        //    // Arrange
-        //    JwtTokenHandler tokenHandler = new JwtTokenHandler(Config);
-        //    var user = DummyUsers.User();
+            // Act
+            string token = tokenHandler.CreateRefreshToken(user);
 
-        //    // Act
-        //    string token = tokenHandler.CreateRefreshToken(user);
-
-        //    // Assert
-        //    Assert.IsNotNull(token);
-        //}
+            // Assert
+            Assert.IsNotNull(token);
+        }
 
         [TestMethod]
         public void CreateRefreshToken_TryCreateNewRefreshJwtTokenWithNullUser_ReturnNULL()
@@ -84,40 +102,24 @@ namespace Users.UnitTest
             Assert.IsNull(token);
         }
 
-        //[TestMethod]
-        //public void ValidateToken_CheckIfJwtTokenIsValid_ReturnTrue()
-        //{
-        //    // Arrange
-        //    JwtTokenHandler tokenHandler = new JwtTokenHandler(Config);
-        //    var user = DummyUsers.User();
-        //    string token = tokenHandler.CreateToken(user);
+     
 
-        //    // Act
-        //    var result = tokenHandler.ValidateToken(token)
-        //        .Identity
-        //        .IsAuthenticated;
+        [TestMethod]
+        public void ValidateRefreshToken_CheckIfJwtRefreshTokenIsValid_ReturnTrue()
+        {
+            // Arrange
+            JwtTokenHandler tokenHandler = new JwtTokenHandler(Config);
+            var user = DummyUsers.User();
+            string token = tokenHandler.CreateRefreshToken(user);
 
-        //    // Assert
-        //    Assert.IsTrue(result);
+            // Act
+            var result = tokenHandler.ValidateRefreshToken(token)
+                .Identity
+                .IsAuthenticated;
 
-        //}
+            // Assert
+            Assert.IsTrue(result);
 
-        //[TestMethod]
-        //public void ValidateRefreshToken_CheckIfJwtRefreshTokenIsValid_ReturnTrue()
-        //{
-        //    // Arrange
-        //    JwtTokenHandler tokenHandler = new JwtTokenHandler(Config);
-        //    var user = DummyUsers.User();
-        //    string token = tokenHandler.CreateRefreshToken(user);
-
-        //    // Act
-        //    var result = tokenHandler.ValidateRefreshToken(token)
-        //        .Identity
-        //        .IsAuthenticated;
-
-        //    // Assert
-        //    Assert.IsTrue(result);
-
-        //}
+        }
     }
 }
