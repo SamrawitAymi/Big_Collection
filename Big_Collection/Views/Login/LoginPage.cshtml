@@ -1,0 +1,29 @@
+﻿@model Big_Collection.ViewModels.UserLoginViewModel
+@{
+    ViewData["Title"] = "LoginPage";
+}
+
+<h1>Login Page</h1>
+<div class="col-sm-auto">
+    <form method="post" asp-action="LoginPage">
+        <p></p>
+        <div class="form-group">
+            <label asp-for="UserName">Epostadress</label>
+            <input asp-for="UserName" type="email" class="form-control">
+            <span asp-validation-for="UserName" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Password">Lösenord</label>
+            <input asp-for="Password" type="password" class="form-control">
+            <span asp-validation-for="Password" class="text-danger"></span>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Logga in</button>
+        <p></p>
+        <a class="btn btn-outline-dark btn-sm" asp-area="" asp-controller="PasswordRecovery" asp-action="RecoverPassword">Glömt lösenord?</a>
+        <a class="btn btn-outline-dark btn-sm" asp-area="" asp-controller="Login" asp-action="RegisterPage">Registrera dig</a>
+
+    </form>
+</div>
+
