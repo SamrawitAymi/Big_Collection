@@ -10,8 +10,8 @@ namespace Users.Repositories
     {
         Task<UserModel> CreateUserAsync(UserRegisterModel userRegiModel);
         Task<UserModel> GetUserByIdAsync(Guid id);
-        Task<List<UserModel>> GetAllUsersAsync();
+        Task<IEnumerable<UserModel>> GetAllUsersAsync();
         Task<UserModel> DeleteUserAsync(Guid id);
-        Task<UserModel> UpdateUserAsync(Guid id, User user);
+        Task<UserModel> UpdateUserAsync(Guid id, UserModel user);
     }
 }

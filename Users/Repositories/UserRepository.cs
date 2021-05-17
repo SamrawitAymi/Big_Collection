@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -70,33 +71,74 @@ namespace Users.Repositories
             catch (Exception)
             {
 
+                return null;
+            }
+        }
+
+        public async Task<UserModel> DeleteUserAsync(Guid id)
+        {
+            try
+            {
+                if (id == Guid.Empty)
+                    return null;
+
+                var user = await _userManager.FindByIdAsync(id.ToString());
+                var deletedUser = _userManager.DeleteAsync(user);
+
+                if (user != null)
+                {
+                    var updatedUserModel = await ConvertToUserModelAsync(user);
+                    return updatedUserModel;
+                }
+                return null;
+            }
+            catch (Exception)
+            {
                 throw;
             }
         }
 
-        public Task<UserModel> DeleteUserAsync(Guid id)
+        public async Task<IEnumerable<UserModel>> GetAllUsersAsync()
         {
-            throw new NotImplementedException();
+            var users = await _context.Users.Select(x => new UserModel()
+            {
+                Id = x.Id,
+                FirstName = x.FirstName,
+                    LastName = x.LastName,
+                    Address = x.Address,
+                    City = x.City,
+                    Email = x.Email,
+                    PhoneNumber = x.PhoneNumber,
+                    Zip = x.Zip}).ToListAsync();
+            return users;
         }
 
-        public Task<List<UserModel>> GetAllUsersAsync()
+        public async Task<UserModel> UpdateUserAsync(Guid id, UserModel user)
         {
-            throw new NotImplementedException();
+            if (id == Guid.Empty || user == null)
+                return null;
+            try
+            {
+                var result = await _userManager.FindByIdAsync(id.ToString());
+                if (id == result.Id || result != null)
+                {
+                    var updatedUser = UpdateUserData(result, user);
+                    var userResult = await _userManager.UpdateAsync(updatedUser);
+
+                    if (userResult.Succeeded)
+                        return user;
+                }
+            }
+            catch (Exception)
+            {
+
+                return null;
+            }
+            return null;
         }
 
 
-        public Task<UserModel> LoginUserAsync(LoginModel loginModel)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<UserModel> UpdateUserAsync(Guid id, User user)
-        {
-            throw new NotImplementedException();
-        }
-
-
-        private async Task<UserModel> ConvertToUserModelAsync(User user)
+        private static async Task<UserModel> ConvertToUserModelAsync(User user)
         {
             var userModel = new UserModel()
             {
@@ -113,7 +155,7 @@ namespace Users.Repositories
             return await Task.FromResult(userModel);
         }
 
-        private User ConvertToUser(UserRegisterModel userModel)
+        private static User ConvertToUser(UserRegisterModel userModel)
         {
             User user = new User()
             {
@@ -129,5 +171,20 @@ namespace Users.Repositories
 
             return user;
         }
+
+        private User UpdateUserData(User user, UserModel userModel)
+        {
+            user.FirstName = userModel.FirstName;
+            user.LastName = userModel.LastName;
+            user.PhoneNumber = userModel.PhoneNumber;
+            user.City = userModel.City;
+            user.Zip = userModel.Zip;
+            user.Address = userModel.Address;
+            user.Email = userModel.Email;
+            user.UserName = userModel.Email;
+
+            return user;
+        }
+
     }
 }

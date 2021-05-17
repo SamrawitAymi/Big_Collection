@@ -30,11 +30,17 @@ namespace Products.Repository
                         var result = await _context.SaveChangesAsync();
                         if (result > 0)
                             return product;
+                        else
+                            return null;
                     }
                     else
                     {
                         return null;
                     }
+                }
+                else
+                {
+                    return null;
                 }
             }
             catch (Exception)
@@ -42,8 +48,6 @@ namespace Products.Repository
 
                 return null;
             }
-            return null;
-
         }
 
         public async Task <Product> UpdateProduct(Product product)
@@ -121,4 +125,5 @@ namespace Products.Repository
             return true;
         }
     }
+
 }
