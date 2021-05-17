@@ -25,5 +25,22 @@ namespace Users.UnitTest
             };
             return user;
         }
+
+        public static UserRegisterModel UserModel()
+        {
+            UserRegisterModel user = new UserRegisterModel()
+            {
+                FirstName = "UnitTest",
+                LastName = "UnitTest",
+                Address = "UnitTest 123",
+                City = "UnitTest",
+                Zip = "12345",
+                PhoneNumber = "070-123 45 67",
+                Email = "test@bigcollection.com",
+                Password = "Test123!"
+            };
+
+            return user;
+        }
     }
 }
