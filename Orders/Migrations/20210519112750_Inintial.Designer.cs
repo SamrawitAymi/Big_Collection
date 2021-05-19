@@ -10,8 +10,8 @@ using Orders.Context;
 namespace Orders.Migrations
 {
     [DbContext(typeof(OrdersDbContext))]
-    [Migration("20210509064626_Initial")]
-    partial class Initial
+    [Migration("20210519112750_Inintial")]
+    partial class Inintial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -30,11 +30,13 @@ namespace Orders.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("PaymentId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("PaymentId")
+                        .HasColumnType("int");
 
-                    b.Property<Guid>("StatusId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("StatusId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(1);
 
                     b.Property<decimal>("TotalPrice")
                         .HasColumnType("decimal(18,2)");
@@ -51,17 +53,25 @@ namespace Orders.Migrations
 
             modelBuilder.Entity("Orders.OrderProducts", b =>
                 {
-                    b.Property<Guid>("ProductId")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("Amount")
-                        .HasColumnType("int");
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<Guid>("OrderId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.HasKey("ProductId");
+                    b.Property<Guid>("ProductId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
 
                     b.HasIndex("OrderId");
 
@@ -70,16 +80,46 @@ namespace Orders.Migrations
 
             modelBuilder.Entity("Orders.Status", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
 
                     b.HasKey("Id");
 
                     b.ToTable("Status");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Accepted"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Processing"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "Shipped"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Name = "Delivered"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Name = "Completed"
+                        });
                 });
 
             modelBuilder.Entity("Orders.Order", b =>
@@ -95,13 +135,11 @@ namespace Orders.Migrations
 
             modelBuilder.Entity("Orders.OrderProducts", b =>
                 {
-                    b.HasOne("Orders.Order", "Order")
+                    b.HasOne("Orders.Order", null)
                         .WithMany("OrderProduct")
                         .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Order");
                 });
 
             modelBuilder.Entity("Orders.Order", b =>

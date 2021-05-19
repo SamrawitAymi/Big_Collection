@@ -28,11 +28,13 @@ namespace Orders.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("PaymentId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("PaymentId")
+                        .HasColumnType("int");
 
                     b.Property<int>("StatusId")
-                        .HasColumnType("int");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(1);
 
                     b.Property<decimal>("TotalPrice")
                         .HasColumnType("decimal(18,2)");
@@ -54,7 +56,9 @@ namespace Orders.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<Guid>("OrderId")
                         .HasColumnType("uniqueidentifier");
@@ -80,11 +84,40 @@ namespace Orders.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
 
                     b.HasKey("Id");
 
                     b.ToTable("Status");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Accepted"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Processing"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "Shipped"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Name = "Delivered"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Name = "Completed"
+                        });
                 });
 
             modelBuilder.Entity("Orders.Order", b =>

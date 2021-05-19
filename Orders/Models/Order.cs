@@ -20,7 +20,7 @@ namespace Orders
 
         public Status Status { get; set; }
 
-        public Guid PaymentId { get; set; }
+        public int PaymentId { get; set; }
 
         public decimal TotalPrice { get; set; }
 
