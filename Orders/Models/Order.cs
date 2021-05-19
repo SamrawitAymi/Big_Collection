@@ -16,7 +16,7 @@ namespace Orders
 
         public Guid UserId { get; set; }
 
-        public Guid StatusId { get; set; }
+        public int StatusId { get; set; }
 
         public Status Status { get; set; }
 
