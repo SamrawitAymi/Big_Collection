@@ -13,5 +13,9 @@ namespace Users.Repositories
         Task<IEnumerable<UserModel>> GetAllUsersAsync();
         Task<UserModel> DeleteUserAsync(Guid id);
         Task<UserModel> UpdateUserAsync(Guid id, UserModel user);
+        Task<LoginResponseModel> LoginUserAsync(LoginModel loginModel);
+        Task<UserModel> UpdatePasswordAsync(Guid id, string oldPass, string newPass);
+        Task<TokenModel> GenerateNewTokensAsync(Guid userId, string refreshToken);
+        Task<bool> CheckIfEmailIsRegisteredAsync(string email);
     }
 }

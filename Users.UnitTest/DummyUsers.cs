@@ -9,7 +9,7 @@ namespace Users.UnitTest
 {
     public class DummyUsers
     {
-        public static User User()
+        public static User TestUser()
         {
             User user = new User()
             {
@@ -36,10 +36,9 @@ namespace Users.UnitTest
                 City = "UnitTest",
                 Zip = "12345",
                 PhoneNumber = "070-123 45 67",
-                Email = "test@bigcollection.com",
+                Email = "test@bigcollection.se",
                 Password = "Test123!"
             };
-
             return user;
         }
     }

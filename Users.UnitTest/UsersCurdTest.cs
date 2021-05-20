@@ -41,6 +41,13 @@ namespace Users.UnitTest
 
             // Assert
             Assert.IsNotNull(createdUser);
+
+            // Clean up and delete createdUser!
+            if (createdUser != null)
+            {
+                var result = UnitTestContext.UserManager.FindByEmailAsync(createdUser.Email).Result;
+                UnitTestContext.UserManager.DeleteAsync(result).Wait();
+            }
         }
 
         [TestMethod]
@@ -64,6 +71,42 @@ namespace Users.UnitTest
 
             // Assert
             Assert.IsNull(createdUser);
+        }
+
+        [TestMethod]
+        public void LoginUserAsync_LoginUser_ReturnUserAndTokens()
+        {
+            // Arrange
+            var loginModel = new LoginModel()
+            {
+                UserName = "test@bigcollection.com",
+                Password = "Test123!",
+            };
+
+            // Act
+            var response = UserRepositoryClass.LoginUserAsync(loginModel).Result;
+
+            // Assert
+            Assert.IsNotNull(response.User);
+            Assert.IsNotNull(response.Token);
+            Assert.IsNotNull(response.RefreshToken);
+        }
+
+        [TestMethod]
+        public void LoginUserAsync_LoginWithWrongCredentials_ReturnNull()
+        {
+            // Arrange
+            var loginModel = new LoginModel()
+            {
+                UserName = "wrongusername@mail.com",
+                Password = "wrongpassword",
+            };
+
+            // Act
+            var response = UserRepositoryClass.LoginUserAsync(loginModel).Result;
+
+            // Assert
+            Assert.IsNull(response);
         }
     }
 }

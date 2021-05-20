@@ -16,7 +16,7 @@ namespace Users.Repositories
         private readonly UserManager<User> _userManager;
         private readonly RoleManager<UserRole> _roleManager;
         private readonly SignInManager<User> _signInManager;
-        private readonly JwtTokenHandler _tokenHacndler;
+        private readonly JwtTokenHandler _tokenHandler;
 
         public UserRepository(UserDbContext userDbContext, UserManager<User> userManager, SignInManager<User> signInManager, RoleManager<UserRole> roleManager, JwtTokenHandler jwtTokenHandler)
         {
@@ -24,7 +24,7 @@ namespace Users.Repositories
             this._userManager = userManager;
             this._signInManager = signInManager;
             this._roleManager = roleManager;
-            this._tokenHacndler = jwtTokenHandler;
+            this._tokenHandler = jwtTokenHandler;
         }
 
         public async Task<UserModel> CreateUserAsync(UserRegisterModel userRegiModel)
@@ -137,8 +137,80 @@ namespace Users.Repositories
             return null;
         }
 
+        public async Task<LoginResponseModel> LoginUserAsync(LoginModel loginModel)
+        {
+            var user = await _userManager.FindByEmailAsync(loginModel.UserName);
 
-        private static async Task<UserModel> ConvertToUserModelAsync(User user)
+            if (user == null)
+                return null;
+
+            var signInResult = await _signInManager.CheckPasswordSignInAsync(user, loginModel.Password, false);
+
+            if (signInResult.Succeeded)
+                return await CreateLoginResponseModelAsync(user);
+
+            return null;
+        }
+
+        private async Task<LoginResponseModel> CreateLoginResponseModelAsync(User user)
+        {
+            var isAdmin = await _userManager.IsInRoleAsync(user, "Admin");
+            var token = _tokenHandler.CreateToken(user, isAdmin);
+            var refreshToken = _tokenHandler.CreateRefreshToken(user);
+
+            var responseModel = new LoginResponseModel()
+            {
+                User = await ConvertToUserModelAsync(user),
+
+
+                Token = token,
+                RefreshToken = refreshToken
+            };
+
+            return responseModel;
+        }
+
+        public async Task<UserModel> UpdatePasswordAsync(Guid id, string oldPass, string newPass)
+        {
+            var user = await _userManager.FindByIdAsync(id.ToString());
+
+            if (user != null)
+            {
+                var result = await _userManager.ChangePasswordAsync(user, oldPass, newPass);
+
+                if (result.Succeeded)
+                    return await ConvertToUserModelAsync(user);
+            }
+            return null;
+        }
+
+        public async Task<TokenModel> GenerateNewTokensAsync(Guid userId, string refreshToken)
+        {
+            var result = _tokenHandler.ValidateRefreshToken(refreshToken);
+
+            if (result != null && result.Identity.IsAuthenticated)
+            {
+                var user = await _userManager.FindByIdAsync(userId.ToString());
+                var isAdmin = await _userManager.IsInRoleAsync(user, "Admin");
+
+                var tokenModel = new TokenModel()
+                {
+                    Token = _tokenHandler.CreateToken(user, isAdmin),
+                    RefreshToken = _tokenHandler.CreateRefreshToken(user)
+                };
+
+                return tokenModel;
+            }
+            return null;
+        }
+
+        public async Task<bool> CheckIfEmailIsRegisteredAsync(string email)
+        {
+            var result = await _context.Users.AnyAsync(x => x.Email == email);
+            return result;
+        }
+
+        public static async Task<UserModel> ConvertToUserModelAsync(User user)
         {
             var userModel = new UserModel()
             {
@@ -185,6 +257,5 @@ namespace Users.Repositories
 
             return user;
         }
-
     }
 }
