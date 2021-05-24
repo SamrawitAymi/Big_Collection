@@ -10,7 +10,6 @@ using System.Threading.Tasks;
 
 namespace Big_Collection.Controllers
 {
-    [Authorize]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
