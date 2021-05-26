@@ -18,13 +18,13 @@ namespace APIGateway
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
+            .ConfigureAppConfiguration((hosts, config) =>
+            {
+                config.AddJsonFile("configuration.json");
+            })
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
-                })
-            .ConfigureAppConfiguration((hostingContext, config) =>
-            {
-                config.AddJsonFile("configuration.json");
-            });
+                });
     }
 }

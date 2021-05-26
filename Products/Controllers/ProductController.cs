@@ -27,7 +27,7 @@ namespace Products.Controllers
 
         // POST: /api​/Product​/create
         [HttpPost ("create")]
-        //[Authorize (Roles = "Admin")]
+        [Authorize (Roles = "Admin")]
         public async Task<ActionResult<Product>> PostProductAsync(Product product)
         {
             if (product != null)
@@ -81,7 +81,7 @@ namespace Products.Controllers
 
 
         //PUT: ​/api​/Product​/edit​/id
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         [HttpPut("edit/id")]
         public async Task<ActionResult<Product>> UpdateProductAsync(Product product, Guid id)
         {
@@ -109,7 +109,7 @@ namespace Products.Controllers
 
         //DELETE: ​/api​/Product​/delete
         [HttpDelete ("delete")]
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<Product>> DeleteProductAsync(Guid id)
         {
             if (_dbContext.Product.Any(x => x.Id == id))

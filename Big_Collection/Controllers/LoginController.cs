@@ -1,10 +1,13 @@
-﻿using Big_Collection.Models;
+﻿using Big_Collection.Common;
+using Big_Collection.Models;
+using Big_Collection.Services;
 using Big_Collection.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,6 +16,15 @@ namespace Big_Collection.Controllers
 {
     public class LoginController : Controller
     {
+        private readonly IClientService _clientService;
+        private readonly ICookieHandler _cookieHandler;
+
+        public LoginController(ICookieHandler cookieHandler, IClientService clientService)
+        {
+            _cookieHandler = cookieHandler;
+            _clientService = clientService;
+        }
+
         [HttpGet]
         public IActionResult LoginPage()
         {
@@ -28,60 +40,45 @@ namespace Big_Collection.Controllers
 
 
         [HttpPost]
-        public async Task<ActionResult> RegisterPageAsync(UserRegistrationViewModel userRegister)
+        public async Task<IActionResult> RegisterPageAsync(UserRegistrationViewModel userRegister)
         {
             if (ModelState.IsValid)
             {
-                if (ModelState.IsValid)
+                var response = await _clientService.SendRequestToGatewayAsync(ApiGateways.ApiGateway.REGISTER_ENDPOINT, HttpMethod.Post, userRegister);
+
+                if (response.StatusCode == HttpStatusCode.Conflict)
                 {
-                    using (var client = new HttpClient())
-                    {
-                        var request = new HttpRequestMessage(HttpMethod.Post, "https://localhost:44342/user/register");
-                        string json = JsonConvert.SerializeObject(userRegister);
-                        request.Content = new StringContent(json, Encoding.UTF8, "application/json");
-
-                        var response = await client.SendAsync(request);
-                        var responseMessage = response.Content;
-                        if (response.StatusCode == System.Net.HttpStatusCode.Conflict)
-                        {
-                            ViewBag.Exists = "Users with Email " + userRegister.Email + "  already exists!";
-                        }
-                        else if (response.IsSuccessStatusCode)
-                        {
-                            return RedirectToAction("LoginPage");
-                        }
-                    }
-
+                    ViewBag.Exists = "User with Email " + userRegister.Email + " already exist!";
                 }
-                return View();
+                else if (response.IsSuccessStatusCode)
+                {
+                    return RedirectToAction("LoginPage");
+                }
             }
+
             return View();
         }
+     
 
         [HttpPost]
-        public async Task<ActionResult> LoginPageAsync(UserLoginViewModel userLogin)
+        public async Task<IActionResult> LoginPageAsync(UserLoginViewModel userLogin)
         {
             if (ModelState.IsValid)
             {
-                using (var client = new HttpClient())
-                {
-                    var request = new HttpRequestMessage(HttpMethod.Post, "https://localhost:44342/user/login");
-                    string json = JsonConvert.SerializeObject(userLogin);
-                    request.Content = new StringContent(json, Encoding.UTF8, "application/json");
+                var response = await _clientService.SendRequestToGatewayAsync(ApiGateways.ApiGateway.LOGIN_ENDPOINT, HttpMethod.Post, userLogin);
 
-                    var response = await client.SendAsync(request);
-                    var responseMessage = await response.Content.ReadAsStringAsync();
-                    if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
-                    {
-                        ViewBag.Message = "Incorrect login information";
-                    }
-                    else if (response.IsSuccessStatusCode)
-                    {
-                        LogedInUser loggedInUser = JsonConvert.DeserializeObject<LogedInUser>(responseMessage);
-                        //ViewBag.Message = "Du är nu inloggad, " + loggedInUser.User.FirstName;
-                        return RedirectToAction("Index", "Home");
-                    }
+                if (response.StatusCode == HttpStatusCode.Unauthorized)
+                {
+                    ViewBag.Message = "Incorrect login credential";
                 }
+                else if (response.IsSuccessStatusCode)
+                {
+                    var logedInUser = await _clientService.ReadResponseAsync<LogedInUser>(response.Content);
+                    await _cookieHandler.CreateLoginCookiesAsync(logedInUser, userLogin.Remember);
+
+                    return RedirectToAction("Index", "Home");
+                }
+
             }
             return View("LoginPage");
         }

@@ -4,69 +4,38 @@
     @if (User.Identity.IsAuthenticated)
     {
         <li class="nav-item">
-            <span class="navbar-text text-dark">Hello @User.Identity.Name!</span>
+            <div class="dropdown">
+                @if (!User.IsInRole("Admin"))
+                {
+                    <button class="btn btn-info btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        My pages <i class="far fa-user"></i>
+
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
+                        <a class="dropdown-item" asp-controller="Account" asp-action="Update">Account Infromation</a>
+                        <a class="dropdown-item" asp-controller="Logout" asp-action="Index">Sing out</a>
+                    </div>
+                }
+                else
+                {
+                    <button class="btn btn-info btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        ADMIN <i class="far fa-user"></i>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
+                        <a class="dropdown-item" asp-controller="Logout" asp-action="Index">Sign Out </a>
+                    </div>
+                }
+            </div>
         </li>
-        <li class="nav-item">
-            <a class="nav-link text-dark" asp-area="MicrosoftIdentity" asp-controller="Account" asp-action="SignOut">Sign out</a>
-        </li>
-    }
+     }
     else
     {
         <li class="nav-item">
             <a class="nav-link text-dark" asp-controller="Login" asp-action="RegisterPage">Register</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link text-dark" asp-controller="Login" asp-action="LoginPage">Login</a>
+            <a class="nav-link text-dark" asp-controller="Login" asp-action="LoginPage">Sign in</a>
         </li>
 
-        @*<li class="nav-item">
-            <a class="nav-link text-dark" asp-area="MicrosoftIdentity" asp-controller="Account" asp-action="SignIn">Sign in</a>
-        </li>*@
     }
 </ul>
-
-@*<ul class="navbar-nav">
-
-    @if (User.Identity.IsAuthenticated)
-    {
-        <li class="nav-item">
-            <div class="dropdown">
-                @if (!User.IsInRole("Admin"))
-                {
-                    <button class="btn btn-info btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Mina Sidor <i class="far fa-user"></i>
-
-                    </button>
-                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
-                        <a class="dropdown-item" asp-controller="Account" asp-action="Update">Kontoinformation</a>
-                        <a class="dropdown-item" asp-controller="Order" asp-action="GetUserOrders">Mina ordrar</a>
-                        <a class="dropdown-item" asp-controller="LogOut" asp-action="Index">Logga ut</a>
-                    </div>
-                }
-                else
-                {
-                    <button class="btn btn-info btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        ADMIN 666 <i class="far fa-user"></i>
-                    </button>
-                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
-                        <a class="dropdown-item" asp-controller="OrderAdmin" asp-action="Index">Orderhantering</a>
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" asp-controller="Products" asp-action="ManageProductsPage">Produkthantering</a>
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" asp-controller="LogOut" asp-action="Index">Logga ut</a>
-                    </div>
-                }
-            </div>
-        </li>
-    }
-    else
-    {
-        <li class="nav-item">
-            <a class="nav-link text-dark" asp-controller="Login" asp-action="RegisterPage">Registrera</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link text-dark" asp-controller="Login" asp-action="LoginPage">Logga In</a>
-        </li>
-    }
-</ul>*@
-

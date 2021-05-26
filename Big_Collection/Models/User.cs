@@ -8,6 +8,7 @@ namespace Big_Collection.Models
 {
     public class User
     {
+        public Guid Id { get; set; }
         [Required]
         public string FirstName { get; set; }
         [Required]
@@ -26,7 +27,7 @@ namespace Big_Collection.Models
         public string Zip { get; set; }
     }
 
-    public class LogedInUser
+    public class LogedInUser : TokenModel
     {
         public User User { get; set; }
     }

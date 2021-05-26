@@ -2,28 +2,36 @@
 @{
     ViewData["Title"] = "LoginPage";
 }
+@ViewBag.Message
+<h1>Sign in Page </h1>
 
-<h1>Login Page</h1>
-<div class="col-sm-auto">
+<div class="card  mb-3 simple-linear shadow-lg cart-padding">
     <form method="post" asp-action="LoginPage">
         <p></p>
         <div class="form-group">
-            <label asp-for="UserName">Epostadress</label>
+            <label asp-for="UserName">Email adress</label>
             <input asp-for="UserName" type="email" class="form-control">
             <span asp-validation-for="UserName" class="text-danger"></span>
         </div>
 
         <div class="form-group">
-            <label asp-for="Password">Lösenord</label>
+            <label asp-for="Password">Password</label>
             <input asp-for="Password" type="password" class="form-control">
             <span asp-validation-for="Password" class="text-danger"></span>
         </div>
 
-        <button type="submit" class="btn btn-primary">Logga in</button>
+        <div class="form-group">
+            <div class="checkbox">
+                <label asp-for="Remember">
+                    <input asp-for="Remember" />
+                    Remember me
+                </label>
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Sign in</button>
         <p></p>
-        <a class="btn btn-outline-dark btn-sm" asp-area="" asp-controller="PasswordRecovery" asp-action="RecoverPassword">Glömt lösenord?</a>
-        <a class="btn btn-outline-dark btn-sm" asp-area="" asp-controller="Login" asp-action="RegisterPage">Registrera dig</a>
+        <a class="btn btn-outline-dark btn-sm" asp-area="" asp-controller="Login" asp-action="RegisterPage">Sign up</a>
 
     </form>
 </div>
-

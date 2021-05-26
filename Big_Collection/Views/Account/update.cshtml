@@ -1,0 +1,70 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+@model User
+@{
+}
+
+<div class="card mb-3 simple-linear shadow-lg cart-padding">
+
+
+    @if (TempData["UpdateSuccess"] != null)
+    {
+        <div class="alert alert-success" role="alert">
+            Kontot har uppdaterats
+        </div>
+    }
+
+    @if (ViewBag.EmailTaken != null)
+    {
+        <div class="alert alert-warning" role="alert">
+            Oops! Epostadressen är redan registrerad. Försök igen!
+        </div>
+    }
+
+    <h3>Uppdatera Leveransadress</h3>
+
+    <form asp-action="Update">
+        <div class="mb-3">
+            <label for="userName" class="form-label">Namn</label>
+            <input asp-for="FirstName" class="form-control" maxlength="30" />
+            <span asp-validation-for="FirstName" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label for="lastName" class="form-label">Efternamn</label>
+            <input asp-for="LastName" class="form-control" maxlength="30">
+            <span asp-validation-for="LastName" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label for="userAddress" class="form-label">Gatuadress</label>
+            <input asp-for="Address" class="form-control" maxlength="30">
+            <span asp-validation-for="Address" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label for="userZip" class="form-label">PostNr</label>
+            <input asp-for="Zip" class="form-control" maxlength="6">
+            <span asp-validation-for="Zip" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label for="userCity" class="form-label">Ort</label>
+            <input asp-for="City" class="form-control" maxlength="30">
+            <span asp-validation-for="City" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label for="userPhone" class="form-label">Telefonnummer</label>
+            <input asp-for="PhoneNumber" class="form-control" maxlength="30">
+            <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label for="userEmail" class="form-label">Epost</label>
+            <input asp-for="Email" class="form-control" maxlength="50">
+            <span asp-validation-for="Email" class="text-danger"></span>
+        </div>
+
+        <input type="hidden" asp-for="Id" />
+        <button type="submit" class="btn btn-primary">Uppdatera</button>
+    </form>
+
+</div>

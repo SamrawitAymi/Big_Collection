@@ -1,5 +1,8 @@
+using Big_Collection.Services;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Rewrite;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -18,7 +21,18 @@ namespace Big_Collection
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddRazorPages();
+            services.AddHttpContextAccessor();
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie();
+            services.AddMvcCore().AddAuthorization(); // Note - this is on the IMvcBuilder, not the service collection
+            services.AddSession();
+
+            services.AddControllersWithViews();
+            //services.AddRazorPages();
+
+            // Add to Dependency Injection
+            services.AddTransient<ICookieHandler, CookieHandler>();
+            services.AddTransient<IClientService, ClientService>();
+            //services.AddTransient<IJwtTokenHandler, JwtTokenHandler>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -38,17 +52,21 @@ namespace Big_Collection
             app.UseStaticFiles();
 
             app.UseRouting();
+            //app.UseCors();
 
             app.UseAuthentication();
             app.UseAuthorization();
+            app.UseSession();
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
-                endpoints.MapRazorPages();
             });
+
+            // Activate SSL
+            app.UseRewriter(new RewriteOptions().AddRedirectToHttpsPermanent());
         }
     }
 }
