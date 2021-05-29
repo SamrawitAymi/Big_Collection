@@ -1,0 +1,49 @@
+﻿@model Big_Collection.Models.Product
+
+
+@{
+    ViewData["Title"] = "ProductDetails";
+}
+
+<div class="row mt-4 simple-linear cart-padding">
+
+    <div class="col-md-12 col-lg-6 mt-3">
+
+    @if (Model != null)
+    {
+        <h3>@Model.Name</h3>
+        <p class="lead">Price: @Model.Price</p>
+        <p class="lead">Quntity in Store: @Model.Quantity</p>
+
+        <div class="d-flex justify-content-between">
+            <div class="form-inline">
+                <h3 class="p-0 m-0 mr-3 ">@Model.Price kr</h3>
+
+            </div>
+        </div>
+
+        <hr />
+
+        <p>@Model.Details</p>
+    }
+    else
+    {
+        <div class="alert alert-warning" role="alert">
+            <h4 class="alert-heading">The product is not available</h4>
+            <p>The product you are looking for does not exist or is not part of our catalog.</p>
+            <hr>
+            <p class="mb-0"><a asp-controller="Products" asp-action="ProductsPage">Clieck here to see all products</a></p>
+        </div>
+    }
+    </div>
+
+    @if (Model != null)
+    {
+        <div class="col-md-12 col-lg-6 text-center">
+            @if (@Model.Image != null)
+            {
+                <img src="@Model.Image" alt="Image of the product" class="img-fluid rounded-lg" width="350" height="250" />
+            }
+        </div>
+    }
+</div>

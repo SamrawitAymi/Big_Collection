@@ -1,0 +1,64 @@
+﻿@model Big_Collection.Models.Product
+@{
+    ViewData["Title"] = Model.Name;
+}
+<div class="card  mb-3 simple-linear shadow-lg cart-padding">
+    <form method="post" asp-action="EditProductPage">
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label asp-for="Id">Id</label>
+                <input asp-for="Id" disabled="disabled" value="@Model.Id" class="form-control">
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label asp-for="Name">Name</label>
+                <input asp-for="Name" value="@Model.Name" class="form-control">
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group col-md-6">
+                <label asp-for="Price">Price</label>
+                <input asp-for="Price" value="@Model.Price" class="form-control">
+                <span asp-validation-for="Price" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label asp-for="Sex">Sex</label>
+                <input type="text" asp-for="Sex" value="@Model.Sex" class="form-control">
+                <span asp-validation-for="Sex" class="text-danger"></span>
+            </div>
+            <div class="form-group col-md-6">
+                <label asp-for="Quantity">Quantity in Store</label>
+                <input type="text" asp-for="Quantity" value="@Model.Quantity" class="form-control">
+                <span asp-validation-for="Quantity" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label asp-for="Color">Colour</label>
+                <input type="text" asp-for="Color" value="@Model.Color" class="form-control">
+                <span asp-validation-for="Color" class="text-danger"></span>
+            </div>
+            <div class="form-group col-md-6">
+                <label asp-for="Size">Size</label>
+                <input type="text" asp-for="Size" value="@Model.Size" class="form-control">
+                <span asp-validation-for="Size" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-row">
+
+            <div class="form-group col-md-6">
+                <label asp-for="Details">Details</label>
+                <input type="text" asp-for="Details" value="@Model.Details" class="form-control">
+                <span asp-validation-for="Details" class="text-danger"></span>
+            </div>
+            <div class="form-group col-md-6">
+                <label asp-for="Image">Imageadress</label>
+                <input type="text" asp-for="Image" value="@Model.Image" class="form-control">
+                <span asp-validation-for="Image" class="text-danger"></span>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Save</button>
+    </form>
+</div>

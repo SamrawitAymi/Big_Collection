@@ -25,6 +25,7 @@ namespace Products.Context
             builder.Entity<Product>(entity => {
                 entity.Property(x => x.Name).IsRequired();
                 entity.Property(x => x.Size).IsRequired();
+                entity.Property(x => x.Sex).IsRequired();
                 entity.Property(x => x.Color).IsRequired();
                 entity.Property(x => x.Price).IsRequired().HasColumnType("decimal(18,2)");
                 entity.Property(x => x.Quantity).IsRequired();

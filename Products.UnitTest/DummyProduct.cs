@@ -11,17 +11,30 @@ namespace Products.UnitTest
     {
         public static Product Product()
         {
+            //var size = new List<string>()
+            //        {
+            //            "XXS", "XS", "S", "M", "XXL", "XL", "L", "F"
+            //        };
+            //var sex = new List<string>()
+            //        {
+            //            "M","F"
+            //        };
+            //var colors = new List<string>()
+            //        {
+            //            "White","Black", "Blue", "Red", "Navy", "Gray", "Purpule"
+            //        };
             Product product = new Product()
             {
                 Id = Guid.NewGuid(),
-                Name = "Emma Willis Wrap Dress",
-                Color = "Pink",
-                Size = "M",
-                Price = 100,
-                Quantity = 1,
-                CategoryId = 2,
-                Image = "https://xcdn.next.co.uk/common/Items/Default/Default/Publications/G68/shotview-315x472/267/225-425s4.jpg",
-                Details = "Brighten up your wardrobe with this head-turning maxi-length dress, part of our exclusive Emma Willis collection. With a wrapover detail at the front, it's designed to flatter with elbow-length puffed sleeves, a soft collar and a ruffle-trim skirt. Wear yours with everything from sneakers to strappy sandals. Other colour available"
+                Name = "Lucky Brand Turquoise Collar Necklace",
+                Color = "Blue",
+                Size = "No-Size",
+                Sex = "F",
+                Price = 499,
+                Details = "Lucky Brand fashion jewelry with etched metal detail and colored stone",
+                Quantity = 9,
+                Image = "https://www.richandrare.com/image/cache/catalog/R26/4962-1-1000x1000.jpg",
+                CategoryId = 4
             };
             return product;
         }

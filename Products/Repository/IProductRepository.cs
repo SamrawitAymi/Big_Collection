@@ -12,6 +12,7 @@ namespace Products.Repository
         Task<Product> UpdateProduct(Product product);
         Task<Product> DeleteProductById(Guid productId);
         Task<Product> GetProductById(Guid productId);
+        Task <IEnumerable<Product>> GetProductByCategory(string productCategoryName, string searchString);
         Task<IEnumerable<Product>> GetAllProducts();
     }
 }

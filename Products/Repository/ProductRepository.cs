@@ -111,6 +111,27 @@ namespace Products.Repository
             return result;
         }
 
+        public async Task<IEnumerable<Product>> GetProductByCategory(string productCategoryName, string searchString)
+        {
+
+            if (_context.Product.Any(p => p.Category.Name == productCategoryName))
+            {
+                var productCategory = _context.Product.Select(x => x.Category);
+                if (!string.IsNullOrEmpty(searchString))
+                {
+                    productCategory = productCategory.Where(p => p.Name.Contains(searchString));
+                }
+                if (!string.IsNullOrEmpty(searchString))
+                {
+                    productCategory = productCategory.Where(p => p.Name == searchString);
+                }
+            }
+                var result = await _context.Product.Where(x => x.Name == productCategoryName).ToListAsync();
+
+                return result;
+                       
+        }
+
         private async Task<bool> IsProductExistInDb(Guid productId)
         {
             return await _context.Product.AnyAsync(x => x.Id == productId);

@@ -1,0 +1,62 @@
+﻿@model IEnumerable<Big_Collection.Models.Product>
+
+@{
+    ViewData["Title"] = "ProductsCategoryPage";
+}
+
+<h1>ProductsCategoryPage</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<form asp-controller="Products" asp-action="ProductsCategoryPage" method = "get">
+   @* <p><select asp-for="" asp-items="Model.Category"*@
+   @*Title: <input type="text" asp-for="SearchString"/>*@
+   <input type="submit" value="Filter"/>
+    </p>
+
+</form>
+<table class="table">
+
+
+    <thead>
+        <tr>
+          
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+         
+            <th>
+                @Html.DisplayNameFor(model => model.Price)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Image)
+            </th>
+           
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+       
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            
+            <td>
+                @Html.DisplayFor(modelItem => item.Price)
+            </td>
+                        <td>
+                @Html.DisplayFor(modelItem => item.Image)
+            </td>
+           
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

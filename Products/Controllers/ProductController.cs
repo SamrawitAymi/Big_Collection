@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Products.Context;
 using Products.Model;
 using Products.Repository;
@@ -50,12 +51,12 @@ namespace Products.Controllers
         }
 
         // GET: /api/Product/id
-        [HttpGet("id")]
+        [HttpGet("{id}")]
         public async Task<ActionResult<Product>> GetProductByIdAsync(Guid id)
         {
             try
             {
-                if (_dbContext.Product.Any(p => p.Id == id))
+                if (_dbContext.Product.Any(p => p.Id == id) == true)
                 {
                     var result = await _productRepo.GetProductById(id);
                     if (result != null)
@@ -72,17 +73,40 @@ namespace Products.Controllers
         }
 
         // GET: /api/Product/all
-        [HttpGet("all")]
+        [HttpGet("getall")]
         public async Task<ActionResult<IEnumerable<Product>>> GetAllProductsAsync()
         {
             var result = await _productRepo.GetAllProducts();
             return Ok(result);
         }
 
+        // GET: /api/Product/all
+        [HttpGet("category")]
+        public async Task<ActionResult<IEnumerable<Product>>> GetProductsbyCatagoryAsync(string productCategoryName, string searchProduct)
+        {
+            try
+            {
+                if (_dbContext.Product.Any(p => p.Category.Name == productCategoryName))
+                {
+                    var productCategory = _dbContext.Product.Select(x => x.Category);
+ 
+                    var result = await _productRepo.GetProductByCategory(productCategoryName, searchProduct);
+                    if (result != null)
+                    {
+                        return Ok(result);
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+            return NotFound();
+        }
 
         //PUT: ​/api​/Product​/edit​/id
         [Authorize(Roles = "Admin")]
-        [HttpPut("edit/id")]
+        [HttpPut("edit/{id}")]
         public async Task<ActionResult<Product>> UpdateProductAsync(Product product, Guid id)
         {
             if (id != product.Id)
@@ -93,7 +117,7 @@ namespace Products.Controllers
                 if (result != null)
                     return Ok(result);
             }
-            catch (Exception)
+            catch (DbUpdateConcurrencyException)
             {
                 if (_dbContext.Product.Any(x => x.Id != id))
                 {
@@ -108,7 +132,7 @@ namespace Products.Controllers
         }
 
         //DELETE: ​/api​/Product​/delete
-        [HttpDelete ("delete")]
+        [HttpDelete ("delete/{id}")]
         [Authorize(Roles = "Admin")]
         public async Task<ActionResult<Product>> DeleteProductAsync(Guid id)
         {

@@ -80,6 +80,21 @@ namespace Products.UnitTest
         }
 
         [TestMethod]
+        public void GetProductByCategoryName_TryToGetProductByCategoryName_ReturnProductbyCategory()
+        {
+            //Arrange
+            var dummyProduct = CreateDummyProductToDatabase();
+            var searchString = "Electronics";
+
+            //Act
+            var products = ProductRepository.GetProductByCategory(dummyProduct.Name, searchString).Result;
+
+            //Assert
+            Assert.IsInstanceOfType(products, typeof(IEnumerable<Product>));
+            DeleteDummyProductFromDatabase(dummyProduct);
+        }
+
+        [TestMethod]
         public void UpdateProduct_TryToUpdateValidProduct_ReturnUpdatedProduct()
         {
             //Arrange

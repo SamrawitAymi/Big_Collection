@@ -1,0 +1,102 @@
+﻿@model List<Big_Collection.Models.Product>
+@{
+    ViewData["Title"] = "ManageProductsPage";
+
+    var alertMessage = TempData["AlertMessage"];
+}
+
+@if (alertMessage != null)
+{
+    <div class="alert alert-success" role="alert">
+        @alertMessage
+    </div>
+}
+
+
+<div class="card  mb-3 simple-linear shadow-lg cart-padding">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>
+                    Namn
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => new Big_Collection.Models.Product().Price )
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => new Big_Collection.Models.Product().Details)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => new Big_Collection.Models.Product().Quantity)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => new Big_Collection.Models.Product().Image)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => new Big_Collection.Models.Product().Color)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => new Big_Collection.Models.Product().Sex)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => new Big_Collection.Models.Product().Size)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => new Big_Collection.Models.Product().CategoryId)
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (int i = 0; i < Model.Count; i++)
+            {
+                <tr id="product_@Model[i].Id">
+                    <td>
+                        @Html.DisplayFor(modelItem => modelItem[i].Name)
+                        @Html.HiddenFor(modelItem => modelItem[i].Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => modelItem[i].Price)
+                        @Html.HiddenFor(modelItem => modelItem[i].Price)
+                    </td>
+                    <td width="200">
+                        @Html.DisplayFor(modelItem => modelItem[i].Details)
+                        @Html.HiddenFor(modelItem => modelItem[i].Details)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => modelItem[i].Quantity)
+                        @Html.HiddenFor(modelItem => modelItem[i].Quantity)
+                    </td>
+                    <td width="100">
+                        <img class="card-img-top" src="@Model[i].Image" alt="bild" height="50">
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => modelItem[i].Color)
+                        @Html.HiddenFor(modelItem => modelItem[i].Color)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => modelItem[i].Sex)
+                        @Html.HiddenFor(modelItem => modelItem[i].Sex)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => modelItem[i].Size)
+                        @Html.HiddenFor(modelItem => modelItem[i].Size)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => modelItem[i].CategoryId)
+                        @Html.HiddenFor(modelItem => modelItem[i].CategoryId)
+                    </td>
+                    <td>
+                        <div>
+                            <a asp-action="EditProductPage" asp-route-id="@Model[i].Id">Edit</a>
+                        </div>
+                        <div>
+                            <a asp-action="DeleteProduct" asp-route-id="@Model[i].Id">Delete</a>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <a class="btn btn-danger" style="width:200px" asp-action="CreateProductPage">Create new Product</a>
+</div>
+
