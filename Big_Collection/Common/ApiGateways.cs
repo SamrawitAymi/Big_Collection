@@ -15,6 +15,7 @@ namespace Big_Collection.Common
 
             public const string USERS_API_BASEURL = GATEWAY + "/user/";     
             public const string PRODUCTS_API_BASEURL = GATEWAY + "/product/";
+            public const string ORDERS_GATEWAY_BASEURL = GATEWAY + "/order/";
 
             // Users API endpoints
             public const string LOGIN_ENDPOINT = USERS_API_BASEURL + "login/";
@@ -28,6 +29,12 @@ namespace Big_Collection.Common
             public const string CREATE_PRODUCT = PRODUCTS_API_BASEURL + "create/";
             public const string EDIT_PRODUCT = PRODUCTS_API_BASEURL + "edit/";
             public const string DELETE_PRODUCT = PRODUCTS_API_BASEURL + "delete/";
+
+            // Orders-api endpoints
+            public const string ALL_ORDERS = ORDERS_GATEWAY_BASEURL + "getall/";
+            public const string CREATE_ORDER = ORDERS_GATEWAY_BASEURL + "create/";
+            public const string GET_ORDER_BY_USERID = ORDERS_GATEWAY_BASEURL + "user/";
+
         }
     }
 }

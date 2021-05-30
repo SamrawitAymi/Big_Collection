@@ -31,6 +31,12 @@
                             <a class="nav-link text-dark bold-text" asp-area="" asp-controller="Products" asp-action="ProductsCategoryPage">Search</a>
                     </ul>
                     <partial name="_LoginPartial" />
+                    <div>
+                        <a asp-area="" asp-controller="Cart" asp-action="Cart" class="btn">
+                            <i class="fas fa-shopping-cart "></i>
+                            <span id="cartButtonCount"></span>
+                        </a>
+                    </div>
                 </div>
             </div>
         </nav>
@@ -49,6 +55,7 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="https://kit.fontawesome.com/a59e8a19b5.js" crossorigin="anonymous"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

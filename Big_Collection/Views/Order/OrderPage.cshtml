@@ -1,0 +1,85 @@
+﻿@model Big_Collection.ViewModels.OrderViewModel
+@{
+    ViewData["Title"] = "Din Order";
+}
+@if (Model.Cart != null && Model.Cart.Count > 0)
+{
+
+
+    <div class="card  mb-3 simple-linear shadow-lg cart-padding">
+        <h1>Dina uppgifter</h1>
+        <table class="table table-striped">
+            <tbody>
+                <tr>
+                    <td>
+                        <address style="font-weight: bold; font-size:large">
+                            <div>@Model.User.FirstName @Model.User.LastName</div>
+                            <div>@Model.User.Address</div>
+                            <div>@Model.User.Zip @Model.User.City</div>
+                            <div>@Model.User.PhoneNumber</div>
+                            <div>@Model.User.Email</div>
+                        </address>
+
+                        <div><a asp-controller="Account" asp-action="Update">Change information</a></div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="card  mb-3 simple-linear shadow-lg cart-padding">
+        <h1>Din beställning</h1>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => new CartItem().Product.Name)
+                    </th>
+                    <th>
+                        &nbsp; @Html.DisplayNameFor(model => new CartItem().Product.Price)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => new CartItem().Quantity)
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (int i = 0; i < Model.Cart.Count; i++)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => modelItem.Cart[i].Product.Name)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => modelItem.Cart[i].Product.Price)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => modelItem.Cart[i].Quantity)
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <div>
+            <p class="bold-text"><span>Totalt pris: @ViewBag.TotalPrice</span></p>
+        </div>
+    </div>
+}
+
+else
+{
+    <div class="card  mb-3 simple-linear shadow-lg cart-padding">
+        <h1>Er kundvagn är tom!</h1>
+        <table>
+            <tbody>
+                <tr>
+                    <td>
+                        <a class="button button1" asp-area="" asp-controller="Products" asp-action="ProductsPage">Back to produkts</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+}
+
+

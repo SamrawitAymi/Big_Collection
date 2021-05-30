@@ -1,71 +1,160 @@
 ﻿/* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
 for details on configuring this project to bundle and minify static web assets. */
 
+
 a.navbar-brand {
-  white-space: normal;
-  text-align: center;
-  word-break: break-all;
+    white-space: normal;
+    text-align: center;
+    word-break: break-all;
 }
+
+.bg-navbar {
+    background-color: #f5d7da;
+}
+
 
 /* Provide sufficient contrast against white background */
 a {
-  color: #0366d6;
+    color: white;
 }
 
 .btn-primary {
-  color: #fff;
-  background-color: #1b6ec2;
-  border-color: #1861ac;
+    color: #fff;
+    background-color: #1b6ec2;
+    border-color: #1861ac;
 }
 
 .nav-pills .nav-link.active, .nav-pills .show > .nav-link {
-  color: #fff;
-  background-color: #1b6ec2;
-  border-color: #1861ac;
+    color: #fff;
+    /*background-color: #1b6ec2;*/
+    background-color: #ffe9ec;
+    border-color: #ffe9ec;
 }
 
 /* Sticky footer styles
 -------------------------------------------------- */
 html {
-  font-size: 14px;
+    font-size: 14px;
 }
+
 @media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
+    html {
+        font-size: 16px;
+    }
 }
 
 .border-top {
-  border-top: 1px solid #e5e5e5;
+    border-top: 1px solid black;
 }
+
 .border-bottom {
-  border-bottom: 1px solid #e5e5e5;
+    border-bottom: 1px solid black;
 }
 
 .box-shadow {
-  box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
+    box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
 }
 
 button.accept-policy {
-  font-size: 1rem;
-  line-height: inherit;
+    font-size: 1rem;
+    line-height: inherit;
 }
 
 /* Sticky footer styles
 -------------------------------------------------- */
 html {
-  position: relative;
-  min-height: 100%;
+    position: relative;
+    min-height: 100%;
 }
 
 body {
-  /* Margin bottom by footer height */
-  margin-bottom: 60px;
+    /* Margin bottom by footer height */
+    margin-bottom: 60px;
+    background-color: whitesmoke;
+    height: 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
 }
+
 .footer {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  white-space: nowrap;
-  line-height: 60px; /* Vertically center the text there */
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    white-space: nowrap;
+    line-height: 60px; /* Vertically center the text there */
+    background-color: #fbf5f6;
+}
+
+.center {
+    margin-top: 70px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.button {
+    background-color: ghostwhite;
+    border: none;
+    color: white;
+    padding: 16px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    transition-duration: 0.5s;
+    cursor: pointer;
+    border-radius: 15px;
+}
+
+.button1 {
+    background-color: white;
+    color: black;
+    border: 2px solid #e67070;
+}
+
+    .button1:hover {
+        background-color: white;
+        color: black;
+    }
+
+.bold-text {
+    font-weight: bold;
+}
+
+.cart-padding {
+    padding: 20px 20px 20px 20px;
+}
+
+.simple-linear {
+    background: none;
+}
+
+#CartContent {
+    border-collapse: separate;
+    border-spacing: 0px 1px;
+}
+
+.increase-button {
+    background-color: transparent;
+    border: none;
+    outline: none;
+    color: #1b7948;
+}
+
+.decrease-button {
+    background-color: transparent;
+    border: none;
+    outline: none;
+    color: #9c1010;
+}
+
+.sticky {
+    position: fixed;
+    top: 0;
+    width: 100%;
+}
+
+#stickyNavbar {
+    z-index: 9999;
 }

@@ -32,7 +32,7 @@ namespace Big_Collection
             // Add to Dependency Injection
             services.AddTransient<ICookieHandler, CookieHandler>();
             services.AddTransient<IClientService, ClientService>();
-            //services.AddTransient<IJwtTokenHandler, JwtTokenHandler>();
+            services.AddSingleton<CartService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

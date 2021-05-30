@@ -1,0 +1,72 @@
+﻿@model Big_Collection.ViewModels.CartViewModel
+
+
+@{
+    ViewData["Title"] = "Cart";
+}
+<div class="card  mb-3 simple-linear shadow-lg cart-padding">
+    <h1>Cart</h1>
+
+    @if (ViewBag.Message != null)
+    {
+        <div class="alert alert-primary" role="alert">
+            <h4 class="alert-heading">OBS!</h4>
+            <p>@ViewBag.Message</p>
+        </div>
+    }
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => new CartItem().Product.Name)
+                </th>
+                <th>
+                    &nbsp; @Html.DisplayNameFor(model => new CartItem().Product.Price)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => new CartItem().Quantity)
+                </th>
+                <th>
+
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (int i = 0; i < Model.CartItems.Count; i++)
+            {
+                <tr id="productInCart_@Model.CartItems[i].Product.Id">
+                    <td>
+                        @Html.DisplayFor(modelItem => modelItem.CartItems[i].Product.Name)
+                        @Html.HiddenFor(modelItem => modelItem.CartItems[i].Product.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => modelItem.CartItems[i].Product.Price)
+                        @Html.HiddenFor(modelItem => modelItem.CartItems[i].Product.Price)
+                    </td>
+                    <td>
+
+                        <button type="button" title="delete  @Model.CartItems[i].Product.Name" class="decrease-button" onclick="ReduceFromCart('@Model.CartItems[i].Product.Id')"><i class="fas fa-minus"></i></button>
+                        <span id="productinCartQuantity_@Model.CartItems[i].Product.Id"> @Model.CartItems[i].Quantity</span>
+
+                        <button type="button" title="add product @Model.CartItems[i].Product.Name" class="increase-button" onclick="AddToCart('@Model.CartItems[i].Product.Id')"><i class="fas fa-plus"></i></button>
+
+                    </td>
+                    <td>
+                        <button type="button" title="delete all products" class="decrease-button" onclick="RemoveFromCart('@Model.CartItems[i].Product.Id')"><i class="fas fa-dumpster-fire"></i></button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <div>
+        <p class="bold-text"> Total Price: <span id="totalPrice">@Model.TotalPrice.ToString("C")</span></p>
+    </div>
+    <div>
+        @if (User.Identity.IsAuthenticated && Model.CartItems.Count > 0)
+        {
+            <a class="btn btn-danger" asp-action="ViewOrderPage" asp-controller="Order">Continue order</a> 
+        }
+    </div>
+    @Html.HiddenFor(modelItem => modelItem.TotalPrice)
+</div>

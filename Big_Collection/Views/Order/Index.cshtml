@@ -1,0 +1,44 @@
+﻿@model List<Order>
+@{
+    var statusUpdateSuccessful = TempData["StatusUpdated"];
+}
+
+@if (statusUpdateSuccessful != null)
+{
+    if ((bool)statusUpdateSuccessful)
+    {
+        <div class="alert alert-success" role="alert">
+            Holy crap, Batman! Order <strong>@TempData["OrderId"]</strong> har uppdaterats
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-warning" role="alert">
+            Kunde inte uppdatera order <strong>@TempData["OrderId"]</strong>
+        </div>
+    }
+}
+
+<h3>Orders</h3>
+
+<div class="card mb-3 simple-linear shadow-lg cart-padding">
+    <table class="table table-striped">
+        <tr style="font-weight:bold">
+            <td>Order-ID</td>
+            <td>Kund-ID</td>
+            <td>Datum</td>
+            <td>Status</td>
+            <td></td>
+        </tr>
+        @foreach (var order in Model)
+        {
+            <tr>
+                <td>@order.Id</td>
+                <td>@order.UserId</td>
+                <td>@order.Date</td>
+                <td>@order.Status.Name</td>
+                <td><a asp-action="OrderUpdate" asp-route-id="@order.Id" title="Uppdatera"><i class="fas fa-edit"></i></a></td>
+            </tr>
+        }
+    </table>
+</div>
