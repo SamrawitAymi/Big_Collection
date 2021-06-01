@@ -12,13 +12,13 @@ using System.Threading.Tasks;
 
 namespace Big_Collection.Controllers
 {
-    public class OrderController : Controller
+    public class OrdersController : Controller
     {
         private readonly IClientService _clientService;
         private readonly ICookieHandler _cookieHandler;
         private readonly CartService _cartService;
 
-        public OrderController(CartService cartService, IClientService clientService, ICookieHandler cookieHandler)
+        public OrdersController(CartService cartService, IClientService clientService, ICookieHandler cookieHandler)
         {
             _cartService = cartService;
             _clientService = clientService;
@@ -56,6 +56,34 @@ namespace Big_Collection.Controllers
             return View();
         }
 
+        private async Task<HttpResponseMessage> PostOrderToGatewayAsync(int paymentId = 1)
+        {
+            var orderService = new OrderService(_cookieHandler, _cartService);
+
+            var order = await orderService.BuildNewOrderAsync(paymentId);
+            var gatewayResponse = await _clientService.SendRequestToGatewayAsync(ApiGateways.ApiGateway.CREATE_ORDER_GATEWAY, HttpMethod.Post, order);
+
+            return gatewayResponse;
+        }
+
+
+        private async Task<ActionResult> PaymentResponse(int paymentId, HttpResponseMessage response)
+        {
+            if (response.IsSuccessStatusCode)
+            {
+                var orderResponse = await PostOrderToGatewayAsync(paymentId);
+
+                if (orderResponse.IsSuccessStatusCode)
+                {
+                    var newOrder = await _clientService.ReadResponseAsync<Order>(orderResponse.Content);
+                    _cartService.EmptyCart();
+                    return RedirectToAction("OrderConfirmationPage", new { orderId = newOrder.Id });
+                }
+            }
+
+            return BadRequest("Betalning kunde inte slutföras");
+        }
+
         [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<IActionResult> OrderUpdate(int statusId, Guid id)
@@ -77,7 +105,7 @@ namespace Big_Collection.Controllers
         {
             var userId = await _cookieHandler.GetClaimFromAuthenticationCookieAsync("UserId");
             var cart = _cartService.GetCartContent();
-            var userResult = await _clientService.SendRequestToGatewayAsync(ApiGateways.ApiGateway.GET_ORDER_BY_USERID + userId, HttpMethod.Get);
+            var userResult = await _clientService.SendRequestToGatewayAsync(ApiGateways.ApiGateway.GET_USER + userId, HttpMethod.Get);
             var user = await _clientService.ReadResponseAsync<User>(userResult.Content);
 
             OrderViewModel vm = new OrderViewModel
@@ -141,6 +169,7 @@ namespace Big_Collection.Controllers
             return (response.IsSuccessStatusCode)
                 ? await _clientService.ReadResponseAsync<List<Order>>(response.Content) : null;
         }
+
         [HttpGet]
         public async Task<IActionResult> GetUserOrders()
         {

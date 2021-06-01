@@ -14,5 +14,6 @@ namespace Products.Repository
         Task<Product> GetProductById(Guid productId);
         Task <IEnumerable<Product>> GetProductByCategory(string productCategoryName, string searchString);
         Task<IEnumerable<Product>> GetAllProducts();
+        Task<bool> UpdateProductsInStockAsync(Dictionary<Guid, int> products);
     }
 }

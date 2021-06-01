@@ -32,6 +32,7 @@ namespace Big_Collection.Common
 
             // Orders-api endpoints
             public const string ALL_ORDERS = ORDERS_GATEWAY_BASEURL + "getall/";
+            public const string CREATE_ORDER_GATEWAY = GATEWAY + "/api/aggregate/";
             public const string CREATE_ORDER = ORDERS_GATEWAY_BASEURL + "create/";
             public const string GET_ORDER_BY_USERID = ORDERS_GATEWAY_BASEURL + "user/";
 

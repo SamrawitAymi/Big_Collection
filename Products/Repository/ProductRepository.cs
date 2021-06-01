@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Transactions;
 
 namespace Products.Repository
 {
@@ -130,6 +131,34 @@ namespace Products.Repository
 
                 return result;
                        
+        }
+
+        public async Task<bool> UpdateProductsInStockAsync(Dictionary<Guid, int> products)
+        {
+            try
+            {
+                
+                using (var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+                {
+                    foreach (var item in products)
+                    {
+                        var product = await GetProductById(item.Key);
+                        product.Quantity -= item.Value;
+
+                        if (product.Quantity < 0)
+                            product.Quantity = 0;
+
+                        await UpdateProduct(product);
+                    }
+
+                    transaction.Complete();
+                    return true;
+                }
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
 
         private async Task<bool> IsProductExistInDb(Guid productId)

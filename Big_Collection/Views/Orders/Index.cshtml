@@ -8,13 +8,13 @@
     if ((bool)statusUpdateSuccessful)
     {
         <div class="alert alert-success" role="alert">
-            Holy crap, Batman! Order <strong>@TempData["OrderId"]</strong> har uppdaterats
+             Order <strong>@TempData["OrderId"]</strong> has updated.
         </div>
     }
     else
     {
         <div class="alert alert-warning" role="alert">
-            Kunde inte uppdatera order <strong>@TempData["OrderId"]</strong>
+            Order couldn't updated' <strong>@TempData["OrderId"]</strong>
         </div>
     }
 }
@@ -25,8 +25,8 @@
     <table class="table table-striped">
         <tr style="font-weight:bold">
             <td>Order-ID</td>
-            <td>Kund-ID</td>
-            <td>Datum</td>
+            <td>Customer-ID</td>
+            <td>Date</td>
             <td>Status</td>
             <td></td>
         </tr>

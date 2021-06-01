@@ -131,6 +131,18 @@ namespace Products.Controllers
             return NoContent();
         }
 
+        [Authorize]
+        [HttpPost("updatestock")]
+        public async Task<ActionResult> UpdateProductQuantity(Dictionary<Guid, int> products)
+        {
+            var result = await _productRepo.UpdateProductsInStockAsync(products);
+
+            if (result)
+                return Ok();
+            else
+                return BadRequest();
+        }
+
         //DELETE: ​/api​/Product​/delete
         [HttpDelete ("delete/{id}")]
         [Authorize(Roles = "Admin")]
