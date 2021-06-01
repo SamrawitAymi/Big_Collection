@@ -65,7 +65,7 @@
     <div>
         @if (User.Identity.IsAuthenticated && Model.CartItems.Count > 0)
         {
-            <a class="btn btn-danger" asp-action="ViewOrderPage" asp-controller="Order">Continue order</a> 
+            <a class="btn btn-danger" asp-action="OrderPage" asp-controller="Order">Continue order</a> 
         }
     </div>
     @Html.HiddenFor(modelItem => modelItem.TotalPrice)
