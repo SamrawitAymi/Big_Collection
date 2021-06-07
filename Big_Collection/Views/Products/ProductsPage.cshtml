@@ -6,11 +6,22 @@
 
 <h1>Products</h1>
 
+<form asp-controller="Products" asp-action="ProductsCategoryPage">
+
+    <div class="form-actions no-color">
+        <p>
+            Search: <input type="text" name="stringSearch" value="@ViewData["FilterByCategory"]" />
+            <input type="submit" value="Search" class="btn btn-default" />
+        </p>
+    </div>
+</form>
+
+
 <div class="row flex-row">
     @foreach (var item in Model)
     {
-         <div class="col-sm-12 col-md-6 col-lg-4 mb-5 d-flex justify-content-center">
-            <div  class="card text-center shadow rounded-lg border-0 product-image" style="background-color: #fbf5f6 ">
+        <div class="col-sm-12 col-md-6 col-lg-4 mb-5 d-flex justify-content-center">
+            <div class="card text-center shadow rounded-lg border-0 product-image" style="background-color: #fbf5f6 ">
                 <div class="rounded product-image">
                     <img class="card-img-top" src="@item.Image" alt="bild" width="350" height="250">
                 </div>
@@ -21,6 +32,6 @@
                     <a style="margin-left: 5px" asp-controller="Products" asp-action="ProductDetails" asp-route-id="@item.Id">Details</a>
                 </div>
             </div>
-         </div>
-     }
+        </div>
+    }
 </div>

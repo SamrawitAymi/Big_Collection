@@ -16,7 +16,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace Products
 {
@@ -33,7 +35,9 @@ namespace Products
         public void ConfigureServices(IServiceCollection services)
         {
 
-            services.AddControllers();
+            //services.AddControllers();
+            services.AddControllers().AddJsonOptions(o => o.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve);
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Products", Version = "v1" });

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using Products.Context;
 using Products.Model;
 using Products.Repository;
@@ -82,28 +83,18 @@ namespace Products.Controllers
 
         // GET: /api/Product/all
         [HttpGet("category")]
-        public async Task<ActionResult<IEnumerable<Product>>> GetProductsbyCatagoryAsync(string productCategoryName, string searchProduct)
+        public async Task<IList<Product>> GetProductsbyCatagoryAsync( string searchProduct)
         {
-            try
+            var result = await _productRepo.GetProductByCategory(searchProduct);
+            if (result != null)
             {
-                if (_dbContext.Product.Any(p => p.Category.Name == productCategoryName))
-                {
-                    var productCategory = _dbContext.Product.Select(x => x.Category);
- 
-                    var result = await _productRepo.GetProductByCategory(productCategoryName, searchProduct);
-                    if (result != null)
-                    {
-                        return Ok(result);
-                    }
-                }
+                return result; 
             }
-            catch (Exception)
-            {
-                return BadRequest();
-            }
-            return NotFound();
+
+            return null;
         }
 
+    
         //PUT: ​/api​/Product​/edit​/id
         [Authorize(Roles = "Admin")]
         [HttpPut("edit/{id}")]

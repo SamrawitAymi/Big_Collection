@@ -112,32 +112,29 @@ namespace Products.Repository
             return result;
         }
 
-        public async Task<IEnumerable<Product>> GetProductByCategory(string productCategoryName, string searchString)
+        public async Task<IList<Product>> GetProductByCategory(string searchCategory)
         {
+            var categoryId = GetCategoryId(searchCategory);
 
-            if (_context.Product.Any(p => p.Category.Name == productCategoryName))
-            {
-                var productCategory = _context.Product.Select(x => x.Category);
-                if (!string.IsNullOrEmpty(searchString))
-                {
-                    productCategory = productCategory.Where(p => p.Name.Contains(searchString));
-                }
-                if (!string.IsNullOrEmpty(searchString))
-                {
-                    productCategory = productCategory.Where(p => p.Name == searchString);
-                }
-            }
-                var result = await _context.Product.Where(x => x.Name == productCategoryName).ToListAsync();
-
-                return result;
+            var result = await _context.Product.Where(p => p.CategoryId == categoryId).ToListAsync();
+           
+            return result;
                        
         }
+
+        private int GetCategoryId(string name)
+        {
+            if (String.IsNullOrEmpty(name))
+                return 0;
+            var result = _context.Category.SingleOrDefault(x => x.Name.ToLower() == name.ToLower());
+            return result.Id;
+        }
+
 
         public async Task<bool> UpdateProductsInStockAsync(Dictionary<Guid, int> products)
         {
             try
-            {
-                
+            {    
                 using (var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
                 {
                     foreach (var item in products)

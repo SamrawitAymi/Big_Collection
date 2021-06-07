@@ -87,7 +87,7 @@ namespace Products.UnitTest
             var searchString = "Electronics";
 
             //Act
-            var products = ProductRepository.GetProductByCategory(dummyProduct.Name, searchString).Result;
+            var products = ProductRepository.GetProductByCategory(searchString).Result;
 
             //Assert
             Assert.IsInstanceOfType(products, typeof(IEnumerable<Product>));

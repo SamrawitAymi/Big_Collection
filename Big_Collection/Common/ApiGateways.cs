@@ -29,6 +29,7 @@ namespace Big_Collection.Common
             public const string CREATE_PRODUCT = PRODUCTS_API_BASEURL + "create/";
             public const string EDIT_PRODUCT = PRODUCTS_API_BASEURL + "edit/";
             public const string DELETE_PRODUCT = PRODUCTS_API_BASEURL + "delete/";
+            public const string GET_CATEGORY = PRODUCTS_API_BASEURL + "category?searchProduct=";
 
             // Orders-api endpoints
             public const string ALL_ORDERS = ORDERS_GATEWAY_BASEURL + "getall/";

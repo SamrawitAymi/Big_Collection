@@ -27,17 +27,15 @@ namespace Big_Collection.Controllers
             return View(products);
         }
 
-        public async Task<IActionResult> ProductsCategoryPage(string productCategory, string stringSearch)
+        public async Task<IActionResult> ProductsCategoryPage(string stringSearch)
         {
-            var products = await GetProductByCategoryNameAsync(productCategory, stringSearch);
-            //var vm = new ProductsCatagoryViewModel
-            //{
-            //    Catagories = new Category(productCategory.Distinct().ToList()),
-            //    Products = products.ToList()
-            //};
+            ViewData["FilterByCategory"] = stringSearch;
+
+            var products = await GetProductByCategoryNameAsync(stringSearch);
             return View(products);
         }
 
+       
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> ManageProductsPage()
         {
@@ -104,12 +102,16 @@ namespace Big_Collection.Controllers
 
 
         [HttpGet]
-        public async Task<List<Product>> GetProductByCategoryNameAsync(string productCategory, string searchString)
+        public async Task<IList<Product>> GetProductByCategoryNameAsync(string searchString)
         {
-            var response = await _clientService.SendRequestToGatewayAsync(ApiGateways.ApiGateway.ALL_PRODUCTS + productCategory, HttpMethod.Get);
-            
-            return (response.IsSuccessStatusCode)
-                ? await _clientService.ReadResponseAsync<List<Product>>(response.Content) : null;
+            var response = await _clientService.SendRequestToGatewayAsync(ApiGateways.ApiGateway.GET_CATEGORY  + searchString, HttpMethod.Get);
+
+            var result = new List<Product>();
+            if (response.IsSuccessStatusCode)
+            {
+                result = await _clientService.ReadResponseAsync<List<Product>>(response.Content);
+            }
+            return result;
         }
 
         [Authorize(Roles = "Admin")]
