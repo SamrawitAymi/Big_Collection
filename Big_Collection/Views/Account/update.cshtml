@@ -12,59 +12,59 @@
 
     @if (TempData["UpdateSuccess"] != null)
     {
-        <div class="alert alert-success" role="alert">
-            Kontot har uppdaterats
-        </div>
+    <div class="alert alert-success" role="alert">
+        The account has been updated!
+    </div>
     }
 
     @if (ViewBag.EmailTaken != null)
     {
         <div class="alert alert-warning" role="alert">
-            Oops! Epostadressen är redan registrerad. Försök igen!
+            Oops! The email address is already registered. Try again!
         </div>
     }
 
-    <h3>Uppdatera Leveransadress</h3>
+    <h3>Update Delivery Address</h3>
 
     <form asp-action="Update">
         <div class="mb-3">
-            <label for="userName" class="form-label">Namn</label>
+            <label for="userName" class="form-label">Name</label>
             <input asp-for="FirstName" class="form-control" maxlength="30" />
             <span asp-validation-for="FirstName" class="text-danger"></span>
         </div>
         <div class="mb-3">
-            <label for="lastName" class="form-label">Efternamn</label>
+            <label for="lastName" class="form-label">FirstName</label>
             <input asp-for="LastName" class="form-control" maxlength="30">
             <span asp-validation-for="LastName" class="text-danger"></span>
         </div>
         <div class="mb-3">
-            <label for="userAddress" class="form-label">Gatuadress</label>
+            <label for="userAddress" class="form-label">Street adress</label>
             <input asp-for="Address" class="form-control" maxlength="30">
             <span asp-validation-for="Address" class="text-danger"></span>
         </div>
         <div class="mb-3">
-            <label for="userZip" class="form-label">PostNr</label>
+            <label for="userZip" class="form-label">Post No.</label>
             <input asp-for="Zip" class="form-control" maxlength="6">
             <span asp-validation-for="Zip" class="text-danger"></span>
         </div>
         <div class="mb-3">
-            <label for="userCity" class="form-label">Ort</label>
+            <label for="userCity" class="form-label">City</label>
             <input asp-for="City" class="form-control" maxlength="30">
             <span asp-validation-for="City" class="text-danger"></span>
         </div>
         <div class="mb-3">
-            <label for="userPhone" class="form-label">Telefonnummer</label>
+            <label for="userPhone" class="form-label">Telephone</label>
             <input asp-for="PhoneNumber" class="form-control" maxlength="30">
             <span asp-validation-for="PhoneNumber" class="text-danger"></span>
         </div>
         <div class="mb-3">
-            <label for="userEmail" class="form-label">Epost</label>
+            <label for="userEmail" class="form-label">Email</label>
             <input asp-for="Email" class="form-control" maxlength="50">
             <span asp-validation-for="Email" class="text-danger"></span>
         </div>
 
         <input type="hidden" asp-for="Id" />
-        <button type="submit" class="btn btn-primary">Uppdatera</button>
+        <button type="submit" class="btn btn-primary">Update</button>
     </form>
 
 </div>

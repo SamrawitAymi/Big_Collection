@@ -1,6 +1,6 @@
 ﻿@model Big_Collection.ViewModels.OrderViewModel
 @{
-    ViewData["Title"] = "Din Order";
+    ViewData["Title"] = "Your Order";
 }
 @if (Model.Cart != null && Model.Cart.Count > 0)
 {
@@ -61,15 +61,16 @@
             </tbody>
         </table>
         <div>
-            <p class="bold-text"><span>Totalt pris: @ViewBag.TotalPrice</span></p>
+            <p class="bold-text"><span>Total price: @ViewBag.TotalPrice</span></p>
         </div>
     </div>
 }
 
+
 else
 {
     <div class="card  mb-3 simple-linear shadow-lg cart-padding">
-        <h1>YOur cart is empty!</h1>
+        <h1>Your cart is empty!</h1>
         <table>
             <tbody>
                 <tr>

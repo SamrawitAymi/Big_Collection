@@ -81,7 +81,7 @@ namespace Big_Collection.Controllers
                 }
             }
 
-            return BadRequest("Betalning kunde inte slutföras");
+            return BadRequest("Payment could not be completed");
         }
 
         [Authorize(Roles = "Admin")]

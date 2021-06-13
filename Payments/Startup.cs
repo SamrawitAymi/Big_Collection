@@ -9,10 +9,12 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Payments.Service;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace Payments
@@ -30,7 +32,8 @@ namespace Payments
         public void ConfigureServices(IServiceCollection services)
         {
 
-            services.AddControllers();
+            services.AddControllers().AddNewtonsoftJson(x =>
+ x.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Payments", Version = "v1" });
@@ -57,6 +60,11 @@ namespace Payments
             {
                 options.DefaultAuthenticateScheme = "Bearer";
             });
+            var payPalConfig = new PayPalConfig();
+            Configuration.GetSection("PayPalConfig").Bind(payPalConfig);
+            services.AddSingleton(payPalConfig);
+            //services.AddSingleton<PayPalClient>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
