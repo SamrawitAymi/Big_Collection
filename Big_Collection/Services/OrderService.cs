@@ -18,14 +18,14 @@ namespace Big_Collection.Services
         }
 
        
-        public async Task<Order> BuildNewOrderAsync(int paymentId)
+        public async Task<Order> BuildNewOrderAsync(string paymentId)
         {
             var orderProducts = await BuildProductListFromCartAsync();
             var order = await ConstructOrderAsync(paymentId, orderProducts);
             return order;
         }
 
-        private async Task<Order> ConstructOrderAsync(int paymentId, List<OrderProduct> orderProducts)
+        private async Task<Order> ConstructOrderAsync(string paymentId, List<OrderProduct> orderProducts)
         {
             var userId = await _cookieHandler.GetClaimFromAuthenticationCookieAsync("UserId");
             var order = new Order()

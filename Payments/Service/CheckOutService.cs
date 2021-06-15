@@ -70,17 +70,7 @@ namespace Payments.Service
             request.RequestBody(order);
             response =await Client().Execute(request);
             var statusCode = response.StatusCode;
-            Order result = response.Result<Order>();
-            var json = Newtonsoft.Json.JsonConvert.SerializeObject(result);
-            Console.WriteLine("Status: {0}", result.Status);
-            Console.WriteLine("Order Id: {0}", result.Id);
-            Console.WriteLine("Intent: {0}", result.CheckoutPaymentIntent);
-            Console.WriteLine("Links:");
-            foreach (LinkDescription link in result.Links)
-            {
-                Console.WriteLine("\t{0}: {1}\tCall Type: {2}", link.Rel, link.Href, link.Method);
-            }
-            
+            Order result = response.Result<Order>();   
             return response;
 
         }
@@ -96,9 +86,6 @@ namespace Payments.Service
             HttpResponse response = await Client().Execute(request);
             var statusCode = response.StatusCode;
             Order result = response.Result<Order>();
-            var json = Newtonsoft.Json.JsonConvert.SerializeObject(result);
-            Console.WriteLine("Status: {0}", result.Status);
-            Console.WriteLine("Capture Id: {0}", result.Id);
             return response;
         }
     }

@@ -16,7 +16,7 @@ namespace Orders.UnitTests.DummyOrder
                 Id = Guid.NewGuid(),
                 StatusId = 1,
                 TotalPrice = 3000.99M,
-                PaymentId = 1,
+                PaymentId = "1",
                 UserId = Guid.NewGuid(),
                 Date = DateTime.Now,
 
@@ -36,7 +36,7 @@ namespace Orders.UnitTests.DummyOrder
                 Id = Guid.NewGuid(),
                 StatusId = 1,
                 TotalPrice = 100.99M,
-                PaymentId = 1,
+                PaymentId = "1",
                 UserId = Guid.NewGuid(),
                 Date = DateTime.Now   
             };

@@ -3,6 +3,7 @@ using Big_Collection.Models;
 using Big_Collection.Services;
 using Big_Collection.ViewModels;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -16,13 +17,61 @@ namespace Big_Collection.Controllers
     {
         private readonly IClientService _clientService;
         private readonly ICookieHandler _cookieHandler;
+        private readonly ISession _session;
         private readonly CartService _cartService;
 
-        public OrdersController(CartService cartService, IClientService clientService, ICookieHandler cookieHandler)
+        public OrdersController(CartService cartService, IClientService clientService, ICookieHandler cookieHandler, IHttpContextAccessor accessor)
         {
             _cartService = cartService;
             _clientService = clientService;
             _cookieHandler = cookieHandler;
+            _session = accessor.HttpContext.Session;
+        }
+
+        public async Task<IActionResult> OrderPage()
+        {
+            var userId = await _cookieHandler.GetClaimFromAuthenticationCookieAsync("UserId");
+            var cart = _cartService.GetCartContent();
+            
+
+            var paymentResult = await _clientService.SendRequestToGatewayAsync(ApiGateways.ApiGateway.PAYMENT_CREATE + "?amount="+ 
+                _cartService.CalculateTotalPrice().ToString() + "&currency=USD", HttpMethod.Get);
+            var payment = await _clientService.ReadResponseAsync<Payment>(paymentResult.Content);
+
+            _session.SetString("payPalUrl", payment.PayPalLink); 
+
+            var userResult = await _clientService.SendRequestToGatewayAsync(ApiGateways.ApiGateway.GET_USER + userId, HttpMethod.Get);
+            var user = await _clientService.ReadResponseAsync<User>(userResult.Content);
+
+            OrderViewModel vm = new OrderViewModel
+            {
+                User = user,
+                Payment = payment,
+                Cart = cart
+            };
+           
+            ViewBag.TotalPrice = _cartService.CalculateTotalPrice();
+           
+            return View(vm);
+        }
+
+       
+        [HttpGet]
+        public async Task<ActionResult> GetPayPalPayVerifyPayment()
+        {
+            var response = await _clientService.SendRequestToGatewayAsync(ApiGateways.ApiGateway.VERIFY_PAYMENT, HttpMethod.Get);
+            var payment = await _clientService.ReadResponseAsync<Payment>(response.Content);
+            return await PaymentResponse(payment.PaymentId, response);       
+        }
+
+        private async Task<HttpResponseMessage> PostOrderToGatewayAsync(string paymentId)
+        {
+            var orderService = new OrderService(_cookieHandler, _cartService);
+
+            var order = await orderService.BuildNewOrderAsync(paymentId);
+            var gatewayResponse = await _clientService.SendRequestToGatewayAsync(ApiGateways.ApiGateway.CREATE_ORDER_GATEWAY, HttpMethod.Post, order);
+
+            return gatewayResponse;
         }
 
         [Authorize(Roles = "Admin")]
@@ -56,18 +105,10 @@ namespace Big_Collection.Controllers
             return View();
         }
 
-        private async Task<HttpResponseMessage> PostOrderToGatewayAsync(int paymentId = 1)
-        {
-            var orderService = new OrderService(_cookieHandler, _cartService);
-
-            var order = await orderService.BuildNewOrderAsync(paymentId);
-            var gatewayResponse = await _clientService.SendRequestToGatewayAsync(ApiGateways.ApiGateway.CREATE_ORDER_GATEWAY, HttpMethod.Post, order);
-
-            return gatewayResponse;
-        }
+   
 
 
-        private async Task<ActionResult> PaymentResponse(int paymentId, HttpResponseMessage response)
+        private async Task<ActionResult> PaymentResponse(string paymentId, HttpResponseMessage response)
         {
             if (response.IsSuccessStatusCode)
             {
@@ -101,21 +142,9 @@ namespace Big_Collection.Controllers
             return RedirectToAction("Index");
         }
 
-        public async Task<IActionResult> OrderPage()
-        {
-            var userId = await _cookieHandler.GetClaimFromAuthenticationCookieAsync("UserId");
-            var cart = _cartService.GetCartContent();
-            var userResult = await _clientService.SendRequestToGatewayAsync(ApiGateways.ApiGateway.GET_USER + userId, HttpMethod.Get);
-            var user = await _clientService.ReadResponseAsync<User>(userResult.Content);
+     
 
-            OrderViewModel vm = new OrderViewModel
-            {
-                User = user,
-                Cart = cart
-            };
-            ViewBag.TotalPrice = _cartService.CalculateTotalPrice();
-            return View(vm);
-        }
+
         [HttpGet]
         public IActionResult OrderRegistrationPage()
         {

@@ -13,7 +13,7 @@ namespace APIGateway.Models
 
         public int StatusId { get; set; }
 
-        public int PaymentId { get; set; }
+        public string PaymentId { get; set; }
 
         public decimal TotalPrice { get; set; }
 

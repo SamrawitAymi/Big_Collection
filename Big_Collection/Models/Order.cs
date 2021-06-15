@@ -15,7 +15,7 @@ namespace Big_Collection.Models
 
         public OrderStatus Status { get; set; }
 
-        public int PaymentId { get; set; }
+        public string PaymentId { get; set; }
 
         public decimal TotalPrice { get; set; }
 

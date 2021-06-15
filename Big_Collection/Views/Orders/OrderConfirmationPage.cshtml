@@ -1,0 +1,61 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+@model Big_Collection.ViewModels.OrderSuccessViewModel
+
+<div class="card p-5">
+    <h1>Congratulations! Your order has been placed!</h1>
+    <h1>Your order confirmation</h1>
+    <br />
+
+    <div class="row">
+        <div class="col-md-2">Order-id:</div>
+        <div class="col-md-8">@Model.Order.Id</div>
+    </div>
+    <div class="row">
+        <div class="col-md-2">Orderdatum:</div>
+        <div class="col-md-8">@Model.Order.Date.ToString("yyyy-MM-dd")</div>
+    </div>
+    <br />
+
+    <h3>Beställda produkter:</h3>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>
+                    Product Name
+                </th>
+                <th>
+                    Quantity
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (int i = 0; i < Model.Order.OrderProduct.Count; i++)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => modelItem.Order.OrderProduct[i].Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => modelItem.Order.OrderProduct[i].Quantity)
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <div>
+        <p class="bold-text"><span>Total price: @Model.Order.TotalPrice</span></p>
+    </div>
+    <br />
+    <h3>Delivery information:</h3>
+    <address>
+        <div>@Model.User.FirstName @Model.User.LastName</div>
+        <div>@Model.User.Address</div>
+        <div>@Model.User.Zip</div>
+        <div>@Model.User.City</div>
+        <div>@Model.User.PhoneNumber</div>
+    </address>
+</div>

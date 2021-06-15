@@ -15,26 +15,40 @@ namespace Payments.Controllers
         
 
         [HttpGet("create")]
-        public async Task<ActionResult<Order>> CreatePayment(string amount, string currency)
+        public async Task<ActionResult<OrderPayment>> CreatePayment(string amount, string currency)
         {
             var checkoutPayment = new CheckOutService(amount, currency);
             var result = await checkoutPayment.CreateOrder();
             Order order = result.Result<Order>();
+            var orderPayment = new OrderPayment
+            {
+                OrderPaymentId = order.Id
+            };
             SaveOrderId(order.Id);
-            return Ok(order);      
+            foreach (var link in order.Links)
+            {
+                if (link.Rel.Equals("approve"))
+                {
+                    orderPayment.PayPalLink = link.Href;
+
+                    return Ok(orderPayment);
+                }   
+            }
+            return NotFound();      
         }
 
 
         [HttpGet("verifypayment")]
-        public async Task<ActionResult<Order>>VerifyPayment()
+        public async Task<ActionResult<OrderPayment>>VerifyPayment()
         {
             var checkoutPayment = new CheckOutService();
             var result = await checkoutPayment.CaptureOrder(GetOrderId());
             Order order = result.Result<Order>();
-            var json = Newtonsoft.Json.JsonConvert.SerializeObject(order);
-            Console.WriteLine("Status: {0}", order.Status);
-            Console.WriteLine("Capture Id: {0}", order.Id);
-            return Ok(order);
+            var orderPayment = new OrderPayment
+            {
+                OrderPaymentId = order.Id
+            };
+            return Ok(orderPayment.OrderPaymentId);
         }
 
         private string SaveOrderId(string orderId)

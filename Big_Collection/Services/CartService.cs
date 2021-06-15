@@ -37,6 +37,16 @@ namespace Big_Collection.Services
             return SessionHandler.GetObjectFromJson<List<CartItem>>(_context.HttpContext.Session, Cookies.CART_SESSION_COOKIE);
         }
 
+        //public void SetPayPalUrl(Payment payment)
+        //{
+        //    SessionHandler.SetObjectAsJson(_context.HttpContext.Session, Cookies.CART_SESSION_COOKIE, payment);
+        //}
+
+        //public Payment GetPayPalUrl()
+        //{
+        //    return SessionHandler.GetObjectFromJson<Payment>(_context.HttpContext.Session, Cookies.PAYPAL_URL_SESSION_COOKIE);
+        //}
+
         public void SaveCartChanges(List<CartItem> cartItems)
         {
             SessionHandler.SetObjectAsJson(_context.HttpContext.Session, Cookies.CART_SESSION_COOKIE, cartItems);

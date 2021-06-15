@@ -9,6 +9,7 @@ namespace Big_Collection.ViewModels
     public class OrderViewModel
     {
         public List<CartItem> Cart { get; set; }
+        public Payment Payment { get; set; }
         public User User { get; set; }
        
     }

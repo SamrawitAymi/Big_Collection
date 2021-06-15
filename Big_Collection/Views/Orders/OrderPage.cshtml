@@ -1,4 +1,7 @@
-﻿@model Big_Collection.ViewModels.OrderViewModel
+﻿@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor HttpContextAccessor 
+@model Big_Collection.ViewModels.OrderViewModel
+
 @{
     ViewData["Title"] = "Your Order";
 }
@@ -64,23 +67,30 @@
             <p class="bold-text"><span>Total price: @ViewBag.TotalPrice</span></p>
         </div>
     </div>
-}
 
+    <div class="card  mb-3 simple-linear shadow-lg cart-padding">
+        <form asp-action="GetPayPalPayVerifyPayment" asp-controller="Order">
+            <div class="col-auto">
+                <input type="button" class="btn btn-info" value="paypal" onclick="location.href='@HttpContextAccessor.HttpContext.Session.GetString("payPalUrl")'" />
+            </div>
+        </form>
+    </div>
+}
 
 else
 {
-    <div class="card  mb-3 simple-linear shadow-lg cart-padding">
-        <h1>Your cart is empty!</h1>
-        <table>
-            <tbody>
-                <tr>
-                    <td>
-                        <a class="button button1" asp-area="" asp-controller="Products" asp-action="ProductsPage">Back to produkts</a>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
+<div class="card  mb-3 simple-linear shadow-lg cart-padding">
+    <h1>Your cart is empty!</h1>
+    <table>
+        <tbody>
+            <tr>
+                <td>
+                    <a class="button button1" asp-area="" asp-controller="Products" asp-action="ProductsPage">Back to produkts</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
 }
 
 
