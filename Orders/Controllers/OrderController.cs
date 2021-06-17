@@ -12,12 +12,12 @@ namespace Orders.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class OrdersController : Controller
+    public class OrderController : Controller
     {
         private readonly OrdersDbContext _orderDbContext;
         private readonly IOrderRepository _orderRepository;
 
-        public OrdersController(OrdersDbContext orderDbContext, IOrderRepository orderRepository)
+        public OrderController(OrdersDbContext orderDbContext, IOrderRepository orderRepository)
         {
             this._orderDbContext = orderDbContext;
             this._orderRepository = orderRepository;
@@ -56,7 +56,7 @@ namespace Orders.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Order>> GetOrderById(Guid id)
         {
-            if (_orderDbContext.Order.Any(x => x.Id != id))
+            if (!_orderDbContext.Order.Any(x => x.Id == id))
                 return NotFound();
             var order = await _orderRepository.GetOrderByOrderIdAsync(id);
             if (order != null)
@@ -81,7 +81,7 @@ namespace Orders.Controllers
         }
 
         [Authorize(Roles = "Admin")]
-        [HttpGet("{status}/{id}")]
+        [HttpPut("{statusId}/{id}")]
         public async Task<ActionResult<Order>> CreateOrderStatus(int statusId, Guid id)
         {
             var order = _orderDbContext.Order.Any(x => x.Id == id);
@@ -112,7 +112,7 @@ namespace Orders.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (_orderDbContext.Order.Any(x => x.Id != order.Id))
+                if (!_orderDbContext.Order.Any(x => x.Id == order.Id))
                 {
                     return NotFound();
                 }
@@ -129,7 +129,7 @@ namespace Orders.Controllers
         [HttpGet("user/{id}")]
         public async Task<ActionResult<List<Order>>> GetOrdersByUserId(Guid id)
         {
-            var orderExist = _orderDbContext.Order.Any(x => x.UserId != id);
+            var orderExist = _orderDbContext.Order.Any(x => x.UserId == id);
 
             if (!orderExist)
                 return NotFound();

@@ -71,7 +71,7 @@
     <div class="card  mb-3 simple-linear shadow-lg cart-padding">
         <form asp-action="GetPayPalPayVerifyPayment" asp-controller="Order">
             <div class="col-auto">
-                <input type="button" class="btn btn-info" value="paypal" onclick="location.href='@HttpContextAccessor.HttpContext.Session.GetString("payPalUrl")'" />
+                <input type="button" class="btn btn-info" value="PayPal" onclick="location.href='@HttpContextAccessor.HttpContext.Session.GetString("payPalUrl")'" />
             </div>
         </form>
     </div>

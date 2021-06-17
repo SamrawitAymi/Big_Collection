@@ -17,7 +17,7 @@ namespace Orders.Repositories
         }
         public async Task<Order> CreateOrderAsync(Order order)
         {
-            if (order != null || order.OrderProduct != null)
+            if (order != null && order.OrderProduct != null)
             {
                 bool isOrderExistInDb = await CheckIfOrderExistInDBAsync(order.Id);
                 if (!isOrderExistInDb)

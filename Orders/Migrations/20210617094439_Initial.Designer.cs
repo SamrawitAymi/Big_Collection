@@ -10,8 +10,8 @@ using Orders.Context;
 namespace Orders.Migrations
 {
     [DbContext(typeof(OrdersDbContext))]
-    [Migration("20210519112750_Inintial")]
-    partial class Inintial
+    [Migration("20210617094439_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -30,8 +30,8 @@ namespace Orders.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("PaymentId")
-                        .HasColumnType("int");
+                    b.Property<string>("PaymentId")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("StatusId")
                         .ValueGeneratedOnAdd()
@@ -86,9 +86,7 @@ namespace Orders.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 

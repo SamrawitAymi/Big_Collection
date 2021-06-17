@@ -39,11 +39,6 @@ namespace Orders.Context
             });
 
 
-            builder.Entity<Status>(entity =>
-            {
-                entity.Property(x => x.Name).IsRequired().HasMaxLength(30);
-            });
-
             builder.Entity<Status>().HasData(
                 new Status() { Id = 1, Name = "Accepted" },
                 new Status() { Id = 2, Name = "Processing" },

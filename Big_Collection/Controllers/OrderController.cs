@@ -5,6 +5,7 @@ using Big_Collection.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,14 +14,14 @@ using System.Threading.Tasks;
 
 namespace Big_Collection.Controllers
 {
-    public class OrdersController : Controller
+    public class OrderController : Controller
     {
         private readonly IClientService _clientService;
         private readonly ICookieHandler _cookieHandler;
         private readonly ISession _session;
         private readonly CartService _cartService;
 
-        public OrdersController(CartService cartService, IClientService clientService, ICookieHandler cookieHandler, IHttpContextAccessor accessor)
+        public OrderController(CartService cartService, IClientService clientService, ICookieHandler cookieHandler, IHttpContextAccessor accessor)
         {
             _cartService = cartService;
             _clientService = clientService;
@@ -55,24 +56,57 @@ namespace Big_Collection.Controllers
             return View(vm);
         }
 
-       
+
         [HttpGet]
         public async Task<ActionResult> GetPayPalPayVerifyPayment()
         {
             var response = await _clientService.SendRequestToGatewayAsync(ApiGateways.ApiGateway.VERIFY_PAYMENT, HttpMethod.Get);
-            var payment = await _clientService.ReadResponseAsync<Payment>(response.Content);
-            return await PaymentResponse(payment.PaymentId, response);       
+
+            var paymentId = await response.Content.ReadAsStringAsync();
+            
+            if (response.IsSuccessStatusCode)
+            {
+                var orderResponse = await PostOrderToGatewayAsync(paymentId);
+
+                if (orderResponse.IsSuccessStatusCode)
+                {
+                    var newOrder = await _clientService.ReadResponseAsync<Order>(orderResponse.Content);
+                    //newOrder.PaymentId = paymentId;
+                    _cartService.EmptyCart();
+                    return RedirectToAction("OrderConfirmationPage", new { orderId = newOrder.Id });
+                }
+            }
+
+            return BadRequest("Payment could not be completed");
         }
+
+        public async Task<ActionResult> OrderConfirmationPage(Guid orderId)
+        {
+            var userId = await _cookieHandler.GetClaimFromAuthenticationCookieAsync("UserId");
+            var userResult = await _clientService.SendRequestToGatewayAsync(ApiGateways.ApiGateway.GET_USER + userId, HttpMethod.Get);
+            var user = await _clientService.ReadResponseAsync<User>(userResult.Content);
+
+            var orderResult = await _clientService.SendRequestToGatewayAsync(ApiGateways.ApiGateway.ORDERS_GATEWAY_BASEURL + orderId, HttpMethod.Get);
+            var order = await _clientService.ReadResponseAsync<Order>(orderResult.Content);
+
+            OrderSuccessViewModel Model = new OrderSuccessViewModel
+            {
+                Order = order,
+                User = user
+            };
+            return View(Model);
+        }
+
 
         private async Task<HttpResponseMessage> PostOrderToGatewayAsync(string paymentId)
         {
             var orderService = new OrderService(_cookieHandler, _cartService);
-
             var order = await orderService.BuildNewOrderAsync(paymentId);
             var gatewayResponse = await _clientService.SendRequestToGatewayAsync(ApiGateways.ApiGateway.CREATE_ORDER_GATEWAY, HttpMethod.Post, order);
 
             return gatewayResponse;
         }
+
 
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Index()
@@ -105,25 +139,6 @@ namespace Big_Collection.Controllers
             return View();
         }
 
-   
-
-
-        private async Task<ActionResult> PaymentResponse(string paymentId, HttpResponseMessage response)
-        {
-            if (response.IsSuccessStatusCode)
-            {
-                var orderResponse = await PostOrderToGatewayAsync(paymentId);
-
-                if (orderResponse.IsSuccessStatusCode)
-                {
-                    var newOrder = await _clientService.ReadResponseAsync<Order>(orderResponse.Content);
-                    _cartService.EmptyCart();
-                    return RedirectToAction("OrderConfirmationPage", new { orderId = newOrder.Id });
-                }
-            }
-
-            return BadRequest("Payment could not be completed");
-        }
 
         [Authorize(Roles = "Admin")]
         [HttpPost]
@@ -143,8 +158,6 @@ namespace Big_Collection.Controllers
         }
 
      
-
-
         [HttpGet]
         public IActionResult OrderRegistrationPage()
         {
@@ -187,13 +200,11 @@ namespace Big_Collection.Controllers
         {
             var response = await _clientService.SendRequestToGatewayAsync(ApiGateways.ApiGateway.ORDERS_GATEWAY_BASEURL + id, HttpMethod.Delete);
             return await ReturnOrder(response);
-
         }
 
         [HttpGet]
         public async Task<List<Order>> GetOrdersByUserIdAsync(Guid id)
         {
-
             var response = await _clientService.SendRequestToGatewayAsync(ApiGateways.ApiGateway.GET_ORDER_BY_USERID + id, HttpMethod.Get);
             return (response.IsSuccessStatusCode)
                 ? await _clientService.ReadResponseAsync<List<Order>>(response.Content) : null;
@@ -226,21 +237,6 @@ namespace Big_Collection.Controllers
             return (response.IsSuccessStatusCode)
                 ? await _clientService.ReadResponseAsync<Order>(response.Content) : null;
         }
-        public async Task<ActionResult> OrderConfirmationPage(Guid orderId)
-        {
-            var userId = await _cookieHandler.GetClaimFromAuthenticationCookieAsync("UserId");
-            var userResult = await _clientService.SendRequestToGatewayAsync(ApiGateways.ApiGateway.GET_USER + userId, HttpMethod.Get);
-            var user = await _clientService.ReadResponseAsync<User>(userResult.Content);
-
-            var orderResult = await _clientService.SendRequestToGatewayAsync(ApiGateways.ApiGateway.ORDERS_GATEWAY_BASEURL + orderId, HttpMethod.Get);
-            var order = await _clientService.ReadResponseAsync<Order>(orderResult.Content);
-
-            OrderSuccessViewModel Model = new OrderSuccessViewModel
-            {
-                Order = order,
-                User = user
-            };
-            return View(Model);
-        }
+       
     }
 }

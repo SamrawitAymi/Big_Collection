@@ -29,11 +29,11 @@ namespace APIGateway.Controllers
             foreach (var item in order.OrderProduct)
                 productsToDecreaseFromStock.Add(item.ProductId, item.Quantity);
 
-            var productResponse = await _clientService.PostRequestAsync("https://localhost:44391/api/products/updatestock", productsToDecreaseFromStock, jwtToken);
+            var productResponse = await _clientService.PostRequestAsync("https://localhost:44391/api/product/updatestock", productsToDecreaseFromStock, jwtToken);
 
             if (productResponse.IsSuccessStatusCode)
             {
-                var orderResponse = await _clientService.PostRequestAsync("https://localhost:44369/api/Orders/create", order, jwtToken);
+                var orderResponse = await _clientService.PostRequestAsync("https://localhost:44369/api/Order/create", order, jwtToken);
 
                 if (orderResponse.IsSuccessStatusCode)
                 {

@@ -25,7 +25,7 @@
       "UpstreamHttpMethod": [ "Get", "Put", "Delete", "Post" ]
     },
     {
-      "DownstreamPathTemplate": "/api/Orders/{catchAll}",
+      "DownstreamPathTemplate": "/api/order/{catchAll}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {

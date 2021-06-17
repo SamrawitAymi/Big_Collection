@@ -58,8 +58,11 @@ namespace Payments.Service
                 },
                 ApplicationContext = new ApplicationContext()
                 {
-                    ReturnUrl = "https://localhost:44367/api/Payment/verifypayment",
-                    CancelUrl = "https://localhost:44367/api//api/Payment/create"
+                    //ReturnUrl = "https://localhost:44367/api/Payment/verifypayment",
+                    ReturnUrl = "https://localhost:44343/Order/GetPayPalPayVerifyPayment",
+
+                    //https://localhost:44362/Orders/OrderConfirmationPage?orderId=&token=66322200JJ012074J&PayerID=HU7CLT2D5N5KE
+                    CancelUrl = "https://localhost:44367/api/Payment/create"
                 }
             };
 

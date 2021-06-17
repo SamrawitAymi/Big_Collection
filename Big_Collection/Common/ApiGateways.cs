@@ -11,7 +11,7 @@ namespace Big_Collection.Common
         {
            
             // API gateway
-            private const string GATEWAY = "https://localhost:44341";
+            public const string GATEWAY = "https://localhost:44341";
 
             public const string USERS_API_BASEURL = GATEWAY + "/user/";     
             public const string PRODUCTS_API_BASEURL = GATEWAY + "/product/";
@@ -35,7 +35,7 @@ namespace Big_Collection.Common
 
             // Orders-api endpoints
             public const string ALL_ORDERS = ORDERS_GATEWAY_BASEURL + "getall/";
-            public const string CREATE_ORDER_GATEWAY = GATEWAY + "/api/aggregate/";
+            public const string CREATE_ORDER_GATEWAY = "https://localhost:44341/api/Aggregate/";
             public const string CREATE_ORDER = ORDERS_GATEWAY_BASEURL + "create/";
             public const string GET_ORDER_BY_USERID = ORDERS_GATEWAY_BASEURL + "user/";
 

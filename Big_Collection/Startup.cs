@@ -52,7 +52,7 @@ namespace Big_Collection
             app.UseStaticFiles();
 
             app.UseRouting();
-            //app.UseCors();
+            app.UseCors();
 
             app.UseAuthentication();
             app.UseAuthorization();
